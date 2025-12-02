@@ -1,0 +1,98 @@
+# Financial Document AI - Configuration File
+# Dataset paths and model settings
+
+# =============================================================================
+# DATASET PATHS
+# =============================================================================
+datasets:
+  pubtabnet:
+    root: "D:/datasets/PubTabNet/pubtabnet/pubtabnet"
+    images:
+      train: "D:/datasets/PubTabNet/pubtabnet/pubtabnet/train"
+      val: "D:/datasets/PubTabNet/pubtabnet/pubtabnet/val"
+      test: "D:/datasets/PubTabNet/pubtabnet/pubtabnet/test"
+    annotations: "D:/datasets/PubTabNet/pubtabnet/pubtabnet/PubTabNet_2.0.0.jsonl"
+    
+  fintabnet:
+    root: "D:/datasets/FinTabNet_c/FinTabNet.c-Structure/FinTabNet.c-Structure"
+    images: "D:/datasets/FinTabNet_c/FinTabNet.c-Structure/FinTabNet.c-Structure/images"
+    annotations:
+      train: "D:/datasets/FinTabNet_c/FinTabNet.c-Structure/FinTabNet.c-Structure/train"
+      val: "D:/datasets/FinTabNet_c/FinTabNet.c-Structure/FinTabNet.c-Structure/val"
+      test: "D:/datasets/FinTabNet_c/FinTabNet.c-Structure/FinTabNet.c-Structure/test"
+    words: "D:/datasets/FinTabNet_c/FinTabNet.c-Structure/FinTabNet.c-Structure/words"
+    
+  doclaynet:
+    root: "D:/datasets/DocLayNet"
+    images: "D:/datasets/DocLayNet/PNG"
+    annotations:
+      train: "D:/datasets/DocLayNet/COCO/train.json"
+      val: "D:/datasets/DocLayNet/COCO/val.json"
+      test: "D:/datasets/DocLayNet/COCO/test.json"
+    # Table category_id = 9
+    
+  pubtables1m:
+    root: "D:/datasets/PubTables1M"
+    structure:
+      train_annotations: "D:/datasets/PubTables1M/PubTables-1M-Structure_Annotations_Train.tar/PubTables-1M-Structure_Annotations_Train"
+      val_annotations: "D:/datasets/PubTables1M/PubTables-1M-Structure_Annotations_Val.tar/PubTables-1M-Structure_Annotations_Val"
+      test_annotations: "D:/datasets/PubTables1M/PubTables-1M-Structure_Annotations_Test.tar/PubTables-1M-Structure_Annotations_Test"
+      test_images: "D:/datasets/PubTables1M/PubTables-1M-Structure_Images_Test.tar/PubTables-1M-Structure_Images_Test"
+      words: "D:/datasets/PubTables1M/PubTables-1M-Structure_Table_Words.tar/PubTables-1M-Structure_Table_Words"
+
+# =============================================================================
+# MODEL SETTINGS
+# =============================================================================
+models:
+  # Microsoft Table Transformer for Detection
+  table_detection:
+    name: "microsoft/table-transformer-detection"
+    threshold: 0.7
+    
+  # Microsoft Table Transformer for Structure Recognition
+  table_structure:
+    name: "microsoft/table-transformer-structure-recognition"
+    threshold: 0.5
+    
+  # Alternative: Table Structure Recognition v1.1 (better for complex tables)
+  table_structure_v1_1:
+    name: "microsoft/table-transformer-structure-recognition-v1.1-all"
+    threshold: 0.5
+
+# =============================================================================
+# INFERENCE SETTINGS (GTX 1660Ti 6GB)
+# =============================================================================
+inference:
+  device: "cuda"
+  batch_size: 1  # Keep small for 6GB GPU
+  max_image_size: 1000  # Resize if larger
+  num_workers: 2
+
+# =============================================================================
+# OUTPUT PATHS
+# =============================================================================
+outputs:
+  root: "./outputs"
+  figures: "./outputs/figures"
+  tables: "./outputs/tables"
+  logs: "./outputs/logs"
+  results: "./outputs/results"
+
+# =============================================================================
+# EVALUATION SETTINGS
+# =============================================================================
+evaluation:
+  # Number of samples for baseline experiments
+  num_samples:
+    pubtabnet: 500
+    fintabnet: 500
+    doclaynet: 500
+    pubtables1m: 500
+  
+  # TEDS evaluation
+  teds:
+    structure_only: false  # If true, ignore cell content
+    
+  # Detection metrics
+  detection:
+    iou_threshold: 0.5
