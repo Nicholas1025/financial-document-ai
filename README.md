@@ -95,69 +95,7 @@ The system supports four benchmark datasets:
 | [FinTabNet](https://developer.ibm.com/data/fintabnet/) | 113K | Financial (SEC) | Structure Recognition |
 | [DocLayNet](https://github.com/DS4SD/DocLayNet) | 81K | Mixed Documents | Layout Detection |
 
-### Dataset Configuration
 
-Update `configs/config.yaml` with your dataset paths:
-
-```yaml
-datasets:
-  pubtabnet:
-    root: "D:/datasets/PubTabNet/pubtabnet/pubtabnet"
-    # ...
-  fintabnet:
-    root: "D:/datasets/FinTabNet_c/FinTabNet.c-Structure/FinTabNet.c-Structure"
-    # ...
-```
-
-## 🚀 Usage
-
-### Run Individual Baseline Experiments
-
-```bash
-# Activate virtual environment
-venv\Scripts\activate
-
-# DocLayNet - Table Detection
-python experiments/baseline_doclaynet.py --num_samples 500
-
-# PubTables-1M - Structure Recognition
-python experiments/baseline_pubtables1m.py --num_samples 500
-
-# FinTabNet - Financial Table Structure
-python experiments/baseline_fintabnet.py --num_samples 500
-
-# PubTabNet - TEDS Evaluation
-python experiments/baseline_pubtabnet.py --num_samples 500
-```
-
-### Run All Baselines
-
-```bash
-python experiments/run_all_baselines.py
-```
-
-### Generate Chapter 4 Figures
-
-```bash
-python experiments/generate_chapter4_figures.py
-```
-
-## 📈 Baseline Results (500 samples)
-
-| Dataset | Task | Metric | Score |
-|---------|------|--------|-------|
-| DocLayNet | Table Detection | F1 @ IoU 0.5 | **74.66%** |
-| PubTables-1M | Structure Recognition | Row F1 | **95.24%** |
-| PubTables-1M | Structure Recognition | Column F1 | **98.73%** |
-| FinTabNet | Structure Recognition | Row F1 | **95.21%** |
-| FinTabNet | Structure Recognition | Column F1 | **99.27%** |
-| PubTabNet | End-to-End | TEDS (structure) | **48.12%** |
-| PubTabNet | End-to-End | TEDS (content) | **16.52%** |
-
-## 🔧 Models Used
-
-- **Table Detection**: [microsoft/table-transformer-detection](https://huggingface.co/microsoft/table-transformer-detection)
-- **Structure Recognition**: [microsoft/table-transformer-structure-recognition-v1.1-all](https://huggingface.co/microsoft/table-transformer-structure-recognition-v1.1-all)
 
 ## 📊 Evaluation Metrics
 
@@ -169,32 +107,3 @@ python experiments/generate_chapter4_figures.py
 | **IoU** | Intersection over Union of bounding boxes |
 | **TEDS** | Tree-Edit-Distance Similarity for structure evaluation |
 
-## 🖥️ Hardware Requirements
-
-- **GPU**: NVIDIA GTX 1660 Ti (6GB) or better
-- **RAM**: 16GB+ recommended
-- **Storage**: 50GB+ for datasets
-
-## 📚 Citation
-
-If you use this code in your research, please cite:
-
-```bibtex
-@misc{financial-document-ai,
-  author = {Nicholas},
-  title = {AI Framework for Financial Table Understanding},
-  year = {2025},
-  publisher = {GitHub},
-  url = {https://github.com/Nicholas1025/financial-document-ai}
-}
-```
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- Microsoft Research for Table Transformer models
-- IBM Research for PubTabNet and FinTabNet datasets
-- DS4SD for DocLayNet dataset
