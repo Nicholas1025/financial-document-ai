@@ -10,7 +10,7 @@ v2.0 Changes:
 - Better handling of text spanning multiple cells
 """
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageOps
 from typing import Dict, List, Tuple, Optional, Union
 import warnings
 
@@ -69,7 +69,11 @@ class TableOCR:
             self._ocr = PaddleOCR(lang=self.lang)
         return self._ocr
     
-    def extract_text(self, image: Union[Image.Image, np.ndarray, str]) -> List[Dict]:
+    def extract_text(
+        self,
+        image: Union[Image.Image, np.ndarray, str],
+        padding: int = 32
+    ) -> List[Dict]:
         """
         Extract all text from an image.
         
@@ -80,14 +84,24 @@ class TableOCR:
             List of dicts with 'text', 'bbox', 'confidence'
             bbox format: [x1, y1, x2, y2]
         """
-        # Convert PIL Image to numpy array
+        pad = padding
+        pad_tuple = (pad, pad, pad, pad)
+        undo_padding = False
         if isinstance(image, Image.Image):
-            image = np.array(image)
+            image = ImageOps.expand(image, border=pad, fill='white')
+            undo_padding = True
+            np_image = np.array(image)
+        elif isinstance(image, np.ndarray):
+            image = ImageOps.expand(Image.fromarray(image), border=pad, fill='white')
+            undo_padding = True
+            np_image = np.array(image)
+        else:
+            np_image = image
         
         # Run OCR - PaddleOCR v3 uses predict() method
         import warnings
         warnings.filterwarnings('ignore', category=DeprecationWarning)
-        results = self.ocr.predict(image)
+        results = self.ocr.predict(np_image)
         
         if not results:
             return []
@@ -106,6 +120,13 @@ class TableOCR:
                     x_coords = [p[0] for p in poly]
                     y_coords = [p[1] for p in poly]
                     bbox = [min(x_coords), min(y_coords), max(x_coords), max(y_coords)]
+                    if undo_padding:
+                        bbox = [
+                            bbox[0] - pad,
+                            bbox[1] - pad,
+                            bbox[2] - pad,
+                            bbox[3] - pad,
+                        ]
                     
                     extracted.append({
                         'text': text,
