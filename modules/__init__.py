@@ -11,3 +11,4 @@ from .numeric import *
 from .semantic import *
 from .validation import *
 from .pipeline import *
+from .document import *

@@ -204,28 +204,40 @@ def run_fintabnet_baseline(config_path: str = "configs/config.yaml",
         row_vals = [metrics['rows']['precision'], metrics['rows']['recall'], metrics['rows']['f1']]
         col_vals = [metrics['columns']['precision'], metrics['columns']['recall'], metrics['columns']['f1']]
         
-        bars1 = ax.bar(x - width/2, row_vals, width, label='Rows', color='steelblue')
-        bars2 = ax.bar(x + width/2, col_vals, width, label='Columns', color='forestgreen')
+        # Professional colors
+        color_rows = '#4A90E2'  # Soft Blue
+        color_cols = '#50E3C2'  # Teal/Green
         
-        ax.set_ylabel('Score')
-        ax.set_title('FinTabNet Structure Recognition Performance')
+        bars1 = ax.bar(x - width/2, row_vals, width, label='Rows', color=color_rows, edgecolor='white', linewidth=1, zorder=3)
+        bars2 = ax.bar(x + width/2, col_vals, width, label='Columns', color=color_cols, edgecolor='white', linewidth=1, zorder=3)
+        
+        ax.set_ylabel('Score', fontsize=12, fontweight='bold')
+        ax.set_title('FinTabNet Structure Recognition Performance', fontsize=14, fontweight='bold', pad=20)
         ax.set_xticks(x)
-        ax.set_xticklabels(['Precision', 'Recall', 'F1'])
-        ax.legend()
-        ax.set_ylim(0, 1.0)
+        ax.set_xticklabels(['Precision', 'Recall', 'F1'], fontsize=12)
+        
+        # Clean up chart
+        ax.legend(loc='lower right', frameon=True, framealpha=0.9, shadow=True)
+        ax.set_ylim(0, 1.15)  # More space for labels
+        ax.grid(axis='y', linestyle='--', alpha=0.5, zorder=0)
+        ax.spines['top'].set_visible(False)
+        ax.spines['right'].set_visible(False)
+        ax.spines['left'].set_linewidth(1.5)
+        ax.spines['bottom'].set_linewidth(1.5)
         
         # Add value labels
         for bar in bars1 + bars2:
             height = bar.get_height()
             ax.annotate(f'{height:.3f}',
                        xy=(bar.get_x() + bar.get_width() / 2, height),
-                       xytext=(0, 3),
+                       xytext=(0, 5),
                        textcoords="offset points",
-                       ha='center', va='bottom')
+                       ha='center', va='bottom',
+                       fontsize=10, fontweight='bold')
         
         plt.tight_layout()
         metrics_fig_path = os.path.join(figures_dir, f"fintabnet_metrics_{timestamp}.png")
-        plt.savefig(metrics_fig_path, dpi=150)
+        plt.savefig(metrics_fig_path, dpi=300)
         plt.close()
         
         print(f"\nResults saved to: {results_file}")

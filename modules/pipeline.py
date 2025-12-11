@@ -16,7 +16,7 @@ from typing import List, Dict, Any, Tuple, Optional
 
 from .structure import TableStructureRecognizer
 from .ocr import TableOCR
-from .numeric import normalize_numeric
+from .numeric import normalize_numeric, normalize_grid_with_metadata, extract_column_metadata
 from .semantic import map_alias, correct_ocr_text
 from .utils import load_config
 
@@ -80,8 +80,8 @@ class FinancialTablePipeline:
 
         labels = self._collect_row_labels(grid)
         
-        # 4. Numeric Normalization
-        norm_grid = self._normalize_grid(grid)
+        # 4. Numeric Normalization (with column metadata propagation)
+        norm_grid, col_metadata = self._normalize_grid(grid)
         
         # 6. Validation Rules (Equity Check)
         equity_checks = self._equity_rule_check(labels, norm_grid)
@@ -92,7 +92,7 @@ class FinancialTablePipeline:
             if fb_grid:
                 # Check if fallback grid actually yields results
                 fb_labels = self._collect_row_labels(fb_grid)
-                fb_norm_grid = self._normalize_grid(fb_grid)
+                fb_norm_grid, fb_col_meta = self._normalize_grid(fb_grid)
                 fb_checks = self._equity_rule_check(fb_labels, fb_norm_grid)
                 
                 # If fallback yields checks or better structure, use it
@@ -101,6 +101,7 @@ class FinancialTablePipeline:
                     headers = fb_headers
                     labels = fb_labels
                     norm_grid = fb_norm_grid
+                    col_metadata = fb_col_meta
                     equity_checks = fb_checks
 
         # 5. Semantic Mapping (Examples)
@@ -115,6 +116,9 @@ class FinancialTablePipeline:
             'labels': labels,
             'grid': grid,
             'normalized_grid': norm_grid,
+            'column_metadata': [{'currency': m.currency, 'scale': m.scale, 'unit': m.unit, 
+                                'column_type': m.column_type, 'year': m.year} 
+                               for m in col_metadata],
             'equity_checks': equity_checks,
             'semantic_mapping': mapping_examples
         }
@@ -130,17 +134,14 @@ class FinancialTablePipeline:
             labels.append(r[0] if r else '')
         return labels
 
-    def _normalize_grid(self, grid: List[List[str]]) -> List[List[Dict[str, Any]]]:
-        norm_grid = []
-        for row in grid:
-            norm_row = []
-            for cell in row:
-                if cell and any(ch.isdigit() for ch in cell):
-                    norm_row.append(normalize_numeric(cell, default_currency='USD'))
-                else:
-                    norm_row.append({'raw': cell, 'value': None})
-            norm_grid.append(norm_row)
-        return norm_grid
+    def _normalize_grid(self, grid: List[List[str]]) -> Tuple[List[List[Dict[str, Any]]], List]:
+        """
+        Normalize grid values using column metadata propagation.
+        
+        Returns:
+            Tuple of (normalized_grid, column_metadata)
+        """
+        return normalize_grid_with_metadata(grid, header_rows=2)
 
     def _cluster_centers(self, values: List[float], threshold: float) -> List[float]:
         centers = []
