@@ -439,8 +439,8 @@ class FinTabNetEvaluator:
 
 
 def main():
-    # Run evaluation with 5000 samples
-    evaluator = FinTabNetEvaluator(sample_size=5000)
+    # Run evaluation with 500 samples (faster, ~30-50 min)
+    evaluator = FinTabNetEvaluator(sample_size=500)
     evaluator.run_evaluation()
 
 
