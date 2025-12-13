@@ -21,10 +21,13 @@ seaborn>=0.12.0
 tqdm>=4.65.0
 scikit-learn>=1.2.0
 
-# Optional: OCR (for later phases)
-# paddleocr>=2.6.0
+# OCR stack
+paddlepaddle-gpu>=2.6.0
+paddleocr>=2.7.0
+
+# Optional: OCR alternatives
 # pytesseract>=0.3.10
 
-# Optional: PDF processing (for later phases)
+# Optional: PDF processing
 # pdf2image>=1.16.0
 # PyMuPDF>=1.22.0
