@@ -58,30 +58,7 @@ pip install -r requirements.txt
 ## 📁 Project Structure
 
 ```
-financial-document-ai/
-├── configs/
-│   └── config.yaml          # Dataset paths and model settings
-├── modules/
-│   ├── data_loaders.py      # Dataset loaders (PubTabNet, FinTabNet, DocLayNet, PubTables-1M)
-│   ├── detection.py         # Table detection using Table Transformer
-│   ├── structure.py         # Structure recognition (rows, columns, cells)
-│   ├── metrics.py           # Evaluation metrics (TEDS, Precision, Recall, F1)
-│   └── utils.py             # Utility functions
-├── experiments/
-│   ├── baseline_doclaynet.py    # DocLayNet detection baseline
-│   ├── baseline_pubtables1m.py  # PubTables-1M structure baseline
-│   ├── baseline_fintabnet.py    # FinTabNet structure baseline
-│   ├── baseline_pubtabnet.py    # PubTabNet TEDS baseline
-│   ├── run_all_baselines.py     # Run all experiments
-│   └── generate_chapter4_figures.py  # Generate thesis figures
-├── outputs/
-│   ├── results/             # Experiment JSON results
-│   └── figures/             # Generated visualizations
-├── data/
-│   └── samples/             # Sample test images
-├── main.py                  # Main entry point
-├── requirements.txt         # Python dependencies
-└── README.md
+
 ```
 
 ## 📊 Datasets
