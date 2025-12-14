@@ -49,7 +49,12 @@ def _run_ocr_subprocess(image_path: str, lang: str, use_gpu: bool) -> List[Dict]
             '--lang', lang,
             '--use_gpu', '1' if use_gpu else '0',
         ]
-        proc = subprocess.run(cmd, capture_output=True, text=True)
+        # Timeout prevents worker from hanging indefinitely (e.g., GPU init stall)
+        try:
+            proc = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
+        except subprocess.TimeoutExpired:
+            raise RuntimeError(f"ocr_worker timed out after 120s for image: {image_path}")
+        
         if proc.returncode != 0:
             stderr = (proc.stderr or '').strip()
             stdout = (proc.stdout or '').strip()

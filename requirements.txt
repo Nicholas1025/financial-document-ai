@@ -30,4 +30,4 @@ paddleocr>=2.7.0
 
 # Optional: PDF processing
 # pdf2image>=1.16.0
-# PyMuPDF>=1.22.0
+PyMuPDF>=1.22.0

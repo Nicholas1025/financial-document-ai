@@ -10,6 +10,8 @@ Encapsulates the end-to-end logic for processing financial table images:
 6. Validation Rules
 """
 import os
+import subprocess
+from datetime import datetime
 import numpy as np
 from PIL import Image
 from typing import List, Dict, Any, Tuple, Optional
@@ -18,6 +20,37 @@ from .ocr import TableOCR
 from .numeric import normalize_numeric, normalize_grid_with_metadata, extract_column_metadata
 from .semantic import map_alias, correct_ocr_text
 from .utils import load_config
+
+
+def _get_git_commit() -> Optional[str]:
+    """Try to get current git commit hash."""
+    try:
+        result = subprocess.run(
+            ['git', 'rev-parse', '--short', 'HEAD'],
+            capture_output=True, text=True, timeout=5
+        )
+        if result.returncode == 0:
+            return result.stdout.strip()
+    except Exception:
+        pass
+    return None
+
+
+def _get_device_info() -> Dict[str, Any]:
+    """Gather device information for run metadata."""
+    info = {'torch_available': False}
+    try:
+        import torch
+        info['torch_available'] = True
+        info['torch_version'] = torch.__version__
+        info['cuda_available'] = torch.cuda.is_available()
+        if torch.cuda.is_available():
+            info['cuda_version'] = torch.version.cuda
+            info['gpu_name'] = torch.cuda.get_device_name(0)
+            info['gpu_count'] = torch.cuda.device_count()
+    except Exception:
+        pass
+    return info
 
 
 class FinancialTablePipeline:
@@ -34,11 +67,30 @@ class FinancialTablePipeline:
             use_v1_1: Whether to use v1.1 structure model (better for complex tables)
         """
         self.config = load_config(config_path)
+        self.config_path = config_path
+        self.use_v1_1 = use_v1_1
         # Keep structure recognizer in the main process (PyTorch).
         from .structure import TableStructureRecognizer
         self.structure_recognizer = TableStructureRecognizer(self.config, use_v1_1=use_v1_1)
         # Stable default: keep PyTorch on GPU, run PaddleOCR on CPU (in a separate process).
         self.ocr = TableOCR(lang='en', use_gpu=False)
+        # Capture run metadata once at init
+        self._run_meta = self._build_run_meta()
+
+    def _build_run_meta(self) -> Dict[str, Any]:
+        """Build metadata about this pipeline run for reproducibility."""
+        return {
+            'timestamp': datetime.now().isoformat(),
+            'git_commit': _get_git_commit(),
+            'config_path': self.config_path,
+            'model_version': 'v1.1' if self.use_v1_1 else 'v1.0',
+            'ocr_mode': 'isolated_cpu',
+            'device_info': _get_device_info(),
+        }
+
+    def get_run_meta(self) -> Dict[str, Any]:
+        """Return a copy of run metadata."""
+        return dict(self._run_meta)
 
     def process_image(self, image_path: str) -> Dict[str, Any]:
         """
@@ -115,6 +167,7 @@ class FinancialTablePipeline:
                 mapping_examples.append({'raw': lbl, 'mapped': map_alias(lbl)})
 
         return {
+            'run_meta': self._run_meta,
             'file': os.path.basename(image_path),
             'headers': headers,
             'labels': labels,

@@ -16,6 +16,7 @@ import json
 import random
 import time
 import argparse
+import hashlib
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Any
@@ -39,8 +40,10 @@ from modules.numeric import detect_cell_type
 class FinTabNetEvaluator:
     """Evaluator for large-scale FinTabNet testing."""
     
-    def __init__(self, sample_size: int = 5000):
+    def __init__(self, sample_size: int = 5000, seed: int = 42):
         self.sample_size = sample_size
+        self.seed = seed
+        self.sample_image_files: List[str] = []  # Will be populated for reproducibility
         self.pipeline = None
         self.validator = TableValidator(tolerance=0.02)
         
@@ -110,6 +113,7 @@ class FinTabNetEvaluator:
             sample = all_images
         
         print(f"Selected sample size: {len(sample)}")
+        self.sample_image_files = sample  # Store for reproducibility
         return sample
     
     def process_single_image(self, image_path: str) -> Dict[str, Any]:
@@ -322,16 +326,52 @@ class FinTabNetEvaluator:
             self.results['validation_pass_rate'] = \
                 self.results['validations_passed'] / self.results['total_validations']
     
+    def _compute_images_dir_hash(self) -> str:
+        """Compute a lightweight hash of image directory listing for version tracking."""
+        try:
+            files = sorted(os.listdir(IMAGES_DIR))[:100]  # First 100 files as fingerprint
+            return hashlib.md5('|'.join(files).encode()).hexdigest()[:12]
+        except Exception:
+            return 'unknown'
+
+    def _save_sample_manifest(self, output_dir: str, timestamp: str) -> str:
+        """Save sample IDs to a separate manifest file for reproducibility."""
+        manifest = {
+            'timestamp': timestamp,
+            'seed': self.seed,
+            'sample_size': self.sample_size,
+            'images_dir': IMAGES_DIR,
+            'images_dir_hash': self._compute_images_dir_hash(),
+            'sample_files': self.sample_image_files,
+        }
+        manifest_file = f"{output_dir}/fintabnet_samples_{self.sample_size}_{timestamp}.json"
+        with open(manifest_file, 'w', encoding='utf-8') as f:
+            json.dump(manifest, f, indent=2, ensure_ascii=False)
+        print(f"Sample manifest saved to: {manifest_file}")
+        return manifest_file
+
     def save_results(self):
         """Save results to JSON."""
         output_dir = 'outputs/results'
         os.makedirs(output_dir, exist_ok=True)
         
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        
+        # Save sample manifest for reproducibility
+        manifest_file = self._save_sample_manifest(output_dir, timestamp)
+        
         output_file = f"{output_dir}/fintabnet_evaluation_{self.sample_size}_{timestamp}.json"
         
         # Clean up large lists for JSON
         output_data = {
+            'run_meta': {
+                'timestamp': timestamp,
+                'seed': self.seed,
+                'sample_size': self.sample_size,
+                'sample_manifest': manifest_file,
+                'images_dir': IMAGES_DIR,
+                'images_dir_hash': self._compute_images_dir_hash(),
+            },
             'timestamp': timestamp,
             'sample_size': self.sample_size,
             'summary': {
@@ -456,7 +496,7 @@ def main():
 
     random.seed(args.seed)
 
-    evaluator = FinTabNetEvaluator(sample_size=args.sample_size)
+    evaluator = FinTabNetEvaluator(sample_size=args.sample_size, seed=args.seed)
     evaluator.run_evaluation()
 
 
