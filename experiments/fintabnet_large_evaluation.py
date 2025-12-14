@@ -15,6 +15,7 @@ import sys
 import json
 import random
 import time
+import argparse
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Any
@@ -411,17 +412,25 @@ class FinTabNetEvaluator:
         
         print(f"\n📝 OCR & CELLS")
         print(f"  Total Cells: {self.results['total_cells']:,}")
-        print(f"  Non-Empty: {self.results['non_empty_cells']:,} ({self.results['non_empty_cells']/self.results['total_cells']*100:.1f}%)")
-        print(f"  Numeric: {self.results['numeric_cells']:,} ({self.results['numeric_cells']/self.results['total_cells']*100:.1f}%)")
+        if self.results['total_cells'] > 0:
+            non_empty_pct = self.results['non_empty_cells'] / self.results['total_cells'] * 100
+            numeric_pct = self.results['numeric_cells'] / self.results['total_cells'] * 100
+        else:
+            non_empty_pct = 0.0
+            numeric_pct = 0.0
+        print(f"  Non-Empty: {self.results['non_empty_cells']:,} ({non_empty_pct:.1f}%)")
+        print(f"  Numeric: {self.results['numeric_cells']:,} ({numeric_pct:.1f}%)")
         
         print(f"\n🔢 CELL TYPES")
         for ct, count in sorted(self.results['cell_types'].items(), key=lambda x: -x[1]):
-            pct = count / self.results['total_cells'] * 100
+            pct = (count / self.results['total_cells'] * 100) if self.results['total_cells'] > 0 else 0.0
             print(f"  {ct}: {count:,} ({pct:.1f}%)")
         
         print(f"\n💰 NORMALIZATION")
-        print(f"  Currency Detected: {self.results['currency_detected']} ({self.results['currency_detected']/n*100:.1f}%)")
-        print(f"  Scale Detected: {self.results['scale_detected']} ({self.results['scale_detected']/n*100:.1f}%)")
+        currency_pct = (self.results['currency_detected'] / n * 100) if n > 0 else 0.0
+        scale_pct = (self.results['scale_detected'] / n * 100) if n > 0 else 0.0
+        print(f"  Currency Detected: {self.results['currency_detected']} ({currency_pct:.1f}%)")
+        print(f"  Scale Detected: {self.results['scale_detected']} ({scale_pct:.1f}%)")
         print(f"  Currency Types: {dict(self.results['currency_types'])}")
         
         print(f"\n✓ VALIDATION")
@@ -433,14 +442,21 @@ class FinTabNetEvaluator:
         print(f"\n⏱️ TIMING")
         print(f"  Total Time: {self.results['total_time']/60:.1f} minutes")
         print(f"  Avg per Image: {self.results['avg_time_per_image']:.2f} seconds")
-        print(f"  Throughput: {1/self.results['avg_time_per_image']:.1f} images/second")
+        throughput = (1 / self.results['avg_time_per_image']) if self.results['avg_time_per_image'] > 0 else 0.0
+        print(f"  Throughput: {throughput:.1f} images/second")
         
         print("\n" + "="*70)
 
 
 def main():
-    # Run evaluation with 500 samples (faster, ~30-50 min)
-    evaluator = FinTabNetEvaluator(sample_size=500)
+    parser = argparse.ArgumentParser(description="Run FinTabNet large-scale evaluation")
+    parser.add_argument("--sample_size", type=int, default=500, help="Number of images to evaluate")
+    parser.add_argument("--seed", type=int, default=42, help="Random seed for sampling images")
+    args = parser.parse_args()
+
+    random.seed(args.seed)
+
+    evaluator = FinTabNetEvaluator(sample_size=args.sample_size)
     evaluator.run_evaluation()
 
 

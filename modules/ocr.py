@@ -13,6 +13,12 @@ import numpy as np
 from PIL import Image, ImageOps
 from typing import Dict, List, Tuple, Optional, Union
 import warnings
+import os
+import json
+import subprocess
+import sys
+import tempfile
+from pathlib import Path
 
 # Suppress PaddleOCR verbose logging
 import logging
@@ -21,12 +27,59 @@ logging.getLogger('ppocr').setLevel(logging.ERROR)
 # Lazy load PaddleOCR to avoid import delays
 _ocr_instance = None
 
+def _ocr_worker_path() -> Path:
+    # modules/ocr.py -> repo root
+    return Path(__file__).resolve().parents[1] / 'ocr_worker.py'
+
+
+def _run_ocr_subprocess(image_path: str, lang: str, use_gpu: bool) -> List[Dict]:
+    worker = _ocr_worker_path()
+    if not worker.exists():
+        raise FileNotFoundError(f"OCR worker script not found: {worker}")
+
+    with tempfile.NamedTemporaryFile(mode='w+', suffix='.json', delete=False, encoding='utf-8') as tmp:
+        out_path = tmp.name
+
+    try:
+        cmd = [
+            sys.executable,
+            str(worker),
+            '--image', image_path,
+            '--out', out_path,
+            '--lang', lang,
+            '--use_gpu', '1' if use_gpu else '0',
+        ]
+        proc = subprocess.run(cmd, capture_output=True, text=True)
+        if proc.returncode != 0:
+            stderr = (proc.stderr or '').strip()
+            stdout = (proc.stdout or '').strip()
+            msg = stderr or stdout or 'unknown error'
+            raise RuntimeError(f"ocr_worker failed (code {proc.returncode}): {msg}")
+
+        with open(out_path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        return data if isinstance(data, list) else []
+    finally:
+        try:
+            os.remove(out_path)
+        except Exception:
+            pass
+
 
 def get_ocr_instance(lang: str = 'en'):
     """Get or create PaddleOCR instance (singleton pattern)."""
     global _ocr_instance
     if _ocr_instance is None:
         from paddleocr import PaddleOCR
+        # Prefer GPU when available; Paddle will fall back to CPU if not compiled with CUDA.
+        try:
+            import paddle
+            if paddle.is_compiled_with_cuda():
+                paddle.set_device('gpu')
+            else:
+                paddle.set_device('cpu')
+        except Exception:
+            pass
         # Initialize PaddleOCR with English model
         # use_angle_cls=True for rotated text detection
         # use_gpu=True if available
@@ -46,7 +99,7 @@ class TableOCR:
     Uses PaddleOCR for text detection and recognition.
     """
     
-    def __init__(self, lang: str = 'en', use_gpu: bool = True):
+    def __init__(self, lang: str = 'en', use_gpu: bool = True, isolate_paddle: Optional[bool] = None):
         """
         Initialize TableOCR.
         
@@ -56,6 +109,11 @@ class TableOCR:
         """
         self.lang = lang
         self.use_gpu = use_gpu
+        # On Windows, Torch (Table Transformer) and Paddle (OCR) can conflict at DLL load time.
+        # Default to isolating PaddleOCR into a separate process.
+        if isolate_paddle is None:
+            isolate_paddle = (os.name == 'nt')
+        self.isolate_paddle = isolate_paddle
         self._ocr = None
     
     @property
@@ -63,10 +121,29 @@ class TableOCR:
         """Lazy load OCR model."""
         if self._ocr is None:
             from paddleocr import PaddleOCR
+            # Ensure Paddle uses the intended device.
+            # Note: PaddleOCR will only run on GPU if paddlepaddle is compiled with CUDA.
+            try:
+                import paddle
+                if self.use_gpu and paddle.is_compiled_with_cuda():
+                    paddle.set_device('gpu')
+                else:
+                    paddle.set_device('cpu')
+            except Exception:
+                pass
             import warnings
             warnings.filterwarnings('ignore', category=DeprecationWarning)
-            # PaddleOCR v3 API - simplified parameters
-            self._ocr = PaddleOCR(lang=self.lang)
+            # Prefer passing common parameters; fall back if the installed PaddleOCR
+            # version doesn't support them.
+            try:
+                self._ocr = PaddleOCR(
+                    lang=self.lang,
+                    use_angle_cls=True,
+                    use_gpu=bool(self.use_gpu),
+                    show_log=False,
+                )
+            except TypeError:
+                self._ocr = PaddleOCR(lang=self.lang)
         return self._ocr
     
     def extract_text(
@@ -84,6 +161,11 @@ class TableOCR:
             List of dicts with 'text', 'bbox', 'confidence'
             bbox format: [x1, y1, x2, y2]
         """
+        # Fast-path: isolate PaddleOCR in a separate process (subprocess + JSON file)
+        # to avoid Torch/Paddle GPU DLL conflicts on Windows.
+        if self.isolate_paddle and isinstance(image, str):
+            return _run_ocr_subprocess(image_path=image, lang=self.lang, use_gpu=bool(self.use_gpu))
+
         pad = padding
         pad_tuple = (pad, pad, pad, pad)
         undo_padding = False
@@ -98,42 +180,55 @@ class TableOCR:
         else:
             np_image = image
         
-        # Run OCR - PaddleOCR v3 uses predict() method
+        # Run OCR - support both PaddleOCR v2 (ocr()) and v3 (predict()) APIs.
         import warnings
         warnings.filterwarnings('ignore', category=DeprecationWarning)
-        results = self.ocr.predict(np_image)
-        
-        if not results:
-            return []
-        
-        extracted = []
-        
-        # PaddleOCR v3 output format
-        for result in results:
-            if 'rec_texts' in result and 'rec_polys' in result and 'rec_scores' in result:
-                texts = result['rec_texts']
-                polys = result['rec_polys']
-                scores = result['rec_scores']
-                
-                for i, (text, poly, score) in enumerate(zip(texts, polys, scores)):
-                    # Convert polygon to bounding box [x1, y1, x2, y2]
+
+        ocr_engine = self.ocr
+        extracted: List[Dict] = []
+
+        # PaddleOCR v3: predict() -> list of dicts with rec_texts/rec_polys/rec_scores
+        if hasattr(ocr_engine, 'predict'):
+            results = ocr_engine.predict(np_image)
+            if not results:
+                return []
+            for result in results:
+                if not isinstance(result, dict):
+                    continue
+                texts = result.get('rec_texts')
+                polys = result.get('rec_polys')
+                scores = result.get('rec_scores')
+                if not (texts and polys and scores):
+                    continue
+                for text, poly, score in zip(texts, polys, scores):
                     x_coords = [p[0] for p in poly]
                     y_coords = [p[1] for p in poly]
                     bbox = [min(x_coords), min(y_coords), max(x_coords), max(y_coords)]
                     if undo_padding:
-                        bbox = [
-                            bbox[0] - pad,
-                            bbox[1] - pad,
-                            bbox[2] - pad,
-                            bbox[3] - pad,
-                        ]
-                    
-                    extracted.append({
-                        'text': text,
-                        'bbox': bbox,
-                        'confidence': float(score)
-                    })
-        
+                        bbox = [bbox[0] - pad, bbox[1] - pad, bbox[2] - pad, bbox[3] - pad]
+                    extracted.append({'text': text, 'bbox': bbox, 'confidence': float(score)})
+            return extracted
+
+        # PaddleOCR v2: ocr(img, cls=True) -> [ [ [poly, (text, score)], ... ] ]
+        results = ocr_engine.ocr(np_image, cls=True)
+        if not results:
+            return []
+
+        # Some versions return list for each image; we pass one image.
+        lines = results[0] if isinstance(results, list) and results and isinstance(results[0], list) else results
+        for item in lines:
+            try:
+                poly = item[0]
+                text, score = item[1]
+            except Exception:
+                continue
+            x_coords = [p[0] for p in poly]
+            y_coords = [p[1] for p in poly]
+            bbox = [min(x_coords), min(y_coords), max(x_coords), max(y_coords)]
+            if undo_padding:
+                bbox = [bbox[0] - pad, bbox[1] - pad, bbox[2] - pad, bbox[3] - pad]
+            extracted.append({'text': text, 'bbox': bbox, 'confidence': float(score)})
+
         return extracted
     
     def align_text_to_cells(

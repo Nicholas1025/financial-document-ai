@@ -1,14 +1,12 @@
-# Financial Document AI - Modules
-# Core modules for table understanding pipeline
+"""Financial Document AI modules.
 
-from .utils import *
-from .data_loaders import *
-from .detection import *
-from .structure import *
-from .metrics import *
-from .ocr import *
-from .numeric import *
-from .semantic import *
-from .validation import *
-from .pipeline import *
-from .document import *
+Keep this package import lightweight.
+
+Many submodules load heavyweight GPU libraries (e.g., PyTorch / Paddle) and can
+conflict with each other on Windows if imported eagerly. Import what you need
+explicitly, e.g.:
+
+	from modules.pipeline import FinancialTablePipeline
+"""
+
+__all__: list[str] = []

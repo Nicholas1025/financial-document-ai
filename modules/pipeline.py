@@ -14,7 +14,6 @@ import numpy as np
 from PIL import Image
 from typing import List, Dict, Any, Tuple, Optional
 
-from .structure import TableStructureRecognizer
 from .ocr import TableOCR
 from .numeric import normalize_numeric, normalize_grid_with_metadata, extract_column_metadata
 from .semantic import map_alias, correct_ocr_text
@@ -35,8 +34,11 @@ class FinancialTablePipeline:
             use_v1_1: Whether to use v1.1 structure model (better for complex tables)
         """
         self.config = load_config(config_path)
+        # Keep structure recognizer in the main process (PyTorch).
+        from .structure import TableStructureRecognizer
         self.structure_recognizer = TableStructureRecognizer(self.config, use_v1_1=use_v1_1)
-        self.ocr = TableOCR(lang='en')
+        # Stable default: keep PyTorch on GPU, run PaddleOCR on CPU (in a separate process).
+        self.ocr = TableOCR(lang='en', use_gpu=False)
 
     def process_image(self, image_path: str) -> Dict[str, Any]:
         """
@@ -55,7 +57,9 @@ class FinancialTablePipeline:
         structure = self.structure_recognizer.recognize(image)
         
         # 2. OCR
-        ocr_results = self.ocr.extract_text(image)
+        # Pass the file path to OCR so it can run in an isolated Paddle process
+        # on Windows GPU setups (avoids Torch/Paddle DLL conflicts).
+        ocr_results = self.ocr.extract_text(image_path)
         
         # 3. Grid Alignment
         grid = self.ocr.align_text_to_grid(
