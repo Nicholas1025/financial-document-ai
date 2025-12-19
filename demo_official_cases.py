@@ -69,7 +69,7 @@ def _run_case(
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Run official demo cases (OCBC/CIMB)")
+    parser = argparse.ArgumentParser(description="Run official demo cases")
     parser.add_argument("--config", default="configs/config.yaml")
     parser.add_argument(
         "--out_root",
@@ -102,12 +102,22 @@ def main() -> int:
         {
             "bank": "CIMB",
             "case": "cimb_balance_sheet",
-            "image": os.path.join("data", "samples", "CIMB BANK-SAMPLE1.png"),
+            "image": os.path.join("data", "samples", "CIMB_BANK-SAMPLE1.png"),
         },
         {
             "bank": "OCBC",
             "case": "ocbc_balance_sheet",
             "image": os.path.join("data", "samples", "ocbc_127_1.png"),
+        },
+        {
+            "bank": "Nanyang",
+            "case": "nanyang_balance_sheet",
+            "image": os.path.join("data", "samples", "nanyang_sample1.png"),
+        },
+        {
+            "bank": "Unilever",
+            "case": "unilever_cashflow",
+            "image": os.path.join("data", "samples", "unliver_144.png"),
         },
     ]
 
@@ -116,13 +126,13 @@ def main() -> int:
         only_cases = {c.strip() for c in args.only.split(",") if c.strip()}
     only_banks = None
     if args.banks:
-        only_banks = {b.strip() for b in args.banks.split(",") if b.strip()}
+        only_banks = {b.strip().lower() for b in args.banks.split(",") if b.strip()}
 
     outputs: List[str] = []
     for c in cases:
         if only_cases is not None and c["case"] not in only_cases:
             continue
-        if only_banks is not None and c["bank"] not in only_banks:
+        if only_banks is not None and c["bank"].lower() not in only_banks:
             continue
         bank_dir = os.path.join(out_root, c["bank"])
         _ensure_dir(bank_dir)

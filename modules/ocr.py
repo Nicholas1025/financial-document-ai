@@ -1,8 +1,14 @@
 """
 OCR Module for Table Text Extraction
 
-Uses PaddleOCR for extracting text from table images.
-Aligns OCR results to detected cell regions using IoU-based matching.
+Supports multiple OCR backends:
+- PaddleOCR (default): Fast, good accuracy for printed text
+- Docling: IBM's document understanding, better for complex layouts
+
+v3.0 Changes:
+- Added BaseOCR abstract interface for multiple backends
+- Added DoclingOCR backend
+- OCR backend selection via factory function
 
 v2.0 Changes:
 - Improved alignment using IoU instead of center-point only
@@ -12,6 +18,7 @@ v2.0 Changes:
 import numpy as np
 from PIL import Image, ImageOps
 from typing import Dict, List, Tuple, Optional, Union
+from abc import ABC, abstractmethod
 import warnings
 import os
 import json
@@ -23,6 +30,64 @@ from pathlib import Path
 # Suppress PaddleOCR verbose logging
 import logging
 logging.getLogger('ppocr').setLevel(logging.ERROR)
+
+
+# =============================================================================
+# Abstract Base Class for OCR Backends
+# =============================================================================
+
+class BaseOCR(ABC):
+    """Abstract base class for OCR backends."""
+    
+    @abstractmethod
+    def extract_text(self, image: Union[Image.Image, np.ndarray, str], **kwargs) -> List[Dict]:
+        """
+        Extract text from an image.
+        
+        Args:
+            image: PIL Image, numpy array, or path to image file
+            
+        Returns:
+            List of dicts with 'text', 'bbox', 'confidence'
+            bbox format: [x1, y1, x2, y2]
+        """
+        pass
+    
+    @property
+    @abstractmethod
+    def name(self) -> str:
+        """Return the name of the OCR backend."""
+        pass
+
+
+# =============================================================================
+# OCR Backend Factory
+# =============================================================================
+
+def get_ocr_backend(backend: str = 'paddleocr', **kwargs) -> 'BaseOCR':
+    """
+    Factory function to get an OCR backend.
+    
+    Args:
+        backend: 'paddleocr' or 'docling'
+        **kwargs: Backend-specific arguments
+        
+    Returns:
+        OCR backend instance
+    """
+    backend = backend.lower()
+    
+    if backend in ('paddleocr', 'paddle'):
+        return TableOCR(**kwargs)
+    elif backend == 'docling':
+        return DoclingOCR(**kwargs)
+    else:
+        raise ValueError(f"Unknown OCR backend: {backend}. Supported: 'paddleocr', 'docling'")
+
+
+# =============================================================================
+# PaddleOCR Backend
+# =============================================================================
 
 # Lazy load PaddleOCR to avoid import delays
 _ocr_instance = None
@@ -97,12 +162,16 @@ def get_ocr_instance(lang: str = 'en'):
     return _ocr_instance
 
 
-class TableOCR:
+class TableOCR(BaseOCR):
     """
     OCR module for extracting text from table images.
     
     Uses PaddleOCR for text detection and recognition.
     """
+    
+    @property
+    def name(self) -> str:
+        return "PaddleOCR"
     
     def __init__(self, lang: str = 'en', use_gpu: bool = True, isolate_paddle: Optional[bool] = None):
         """
@@ -621,6 +690,411 @@ def test_ocr():
     
     print("\nOCR test completed!")
     return results
+
+
+# =============================================================================
+# Docling OCR Backend
+# =============================================================================
+
+class DoclingOCR(BaseOCR):
+    """
+    OCR module using IBM Docling for document understanding.
+    
+    Docling provides advanced PDF/image parsing with table structure recognition.
+    Better for complex layouts but slower than PaddleOCR.
+    
+    Install: pip install docling
+    """
+    
+    @property
+    def name(self) -> str:
+        return "Docling"
+    
+    def __init__(self, use_ocr: bool = True, use_table_model: bool = True):
+        """
+        Initialize DoclingOCR.
+        
+        Args:
+            use_ocr: Enable OCR for scanned documents
+            use_table_model: Enable table structure model
+        """
+        self.use_ocr = use_ocr
+        self.use_table_model = use_table_model
+        self._converter = None
+    
+    @property
+    def converter(self):
+        """Lazy load Docling converter."""
+        if self._converter is None:
+            try:
+                from docling.document_converter import DocumentConverter
+                from docling.datamodel.pipeline_options import PdfPipelineOptions
+                from docling.datamodel.base_models import InputFormat
+                from docling.document_converter import PdfFormatOption
+                
+                # Configure pipeline options
+                pipeline_options = PdfPipelineOptions()
+                pipeline_options.do_ocr = self.use_ocr
+                pipeline_options.do_table_structure = self.use_table_model
+                
+                self._converter = DocumentConverter(
+                    format_options={
+                        InputFormat.PDF: PdfFormatOption(pipeline_options=pipeline_options),
+                        InputFormat.IMAGE: PdfFormatOption(pipeline_options=pipeline_options),
+                    }
+                )
+            except ImportError:
+                raise ImportError(
+                    "Docling is not installed. Install with: pip install docling"
+                )
+        return self._converter
+    
+    def extract_text(self, image: Union[Image.Image, np.ndarray, str], **kwargs) -> List[Dict]:
+        """
+        Extract text from an image using Docling.
+        
+        Args:
+            image: PIL Image, numpy array, or path to image file
+            
+        Returns:
+            List of dicts with 'text', 'bbox', 'confidence'
+        """
+        # Docling works best with file paths
+        temp_file = None
+        try:
+            if isinstance(image, str):
+                image_path = image
+            else:
+                # Save to temp file
+                if isinstance(image, np.ndarray):
+                    image = Image.fromarray(image)
+                temp_file = tempfile.NamedTemporaryFile(suffix='.png', delete=False)
+                image.save(temp_file.name)
+                image_path = temp_file.name
+            
+            # Convert with Docling
+            result = self.converter.convert(image_path)
+            doc = result.document
+            
+            # Extract text items with bounding boxes
+            extracted = []
+            
+            # Get text from document
+            # Docling provides structured output - we extract text blocks
+            for item in doc.texts:
+                text = item.text if hasattr(item, 'text') else str(item)
+                if not text or not text.strip():
+                    continue
+                
+                # Get bounding box if available
+                bbox = [0, 0, 100, 20]  # Default bbox
+                if hasattr(item, 'prov') and item.prov:
+                    for prov in item.prov:
+                        if hasattr(prov, 'bbox') and prov.bbox:
+                            b = prov.bbox
+                            bbox = [b.l, b.t, b.r, b.b]
+                            break
+                
+                extracted.append({
+                    'text': text.strip(),
+                    'bbox': bbox,
+                    'confidence': 0.95  # Docling doesn't provide confidence scores
+                })
+            
+            # Also extract table cells if available
+            for table in doc.tables:
+                if hasattr(table, 'data') and table.data:
+                    for row_idx, row in enumerate(table.data):
+                        for col_idx, cell in enumerate(row):
+                            cell_text = str(cell) if cell else ''
+                            if cell_text.strip():
+                                # Approximate bbox based on position
+                                extracted.append({
+                                    'text': cell_text.strip(),
+                                    'bbox': [col_idx * 100, row_idx * 30, (col_idx + 1) * 100, (row_idx + 1) * 30],
+                                    'confidence': 0.95
+                                })
+            
+            return extracted
+            
+        except Exception as e:
+            warnings.warn(f"Docling extraction failed: {e}. Returning empty results.")
+            return []
+        finally:
+            if temp_file:
+                try:
+                    os.remove(temp_file.name)
+                except:
+                    pass
+    
+    def extract_tables(self, image: Union[Image.Image, np.ndarray, str]) -> List[Dict]:
+        """
+        Extract tables directly using Docling's table model.
+        
+        Returns structured table data with cells and their positions.
+        """
+        temp_file = None
+        try:
+            if isinstance(image, str):
+                image_path = image
+            else:
+                if isinstance(image, np.ndarray):
+                    image = Image.fromarray(image)
+                temp_file = tempfile.NamedTemporaryFile(suffix='.png', delete=False)
+                image.save(temp_file.name)
+                image_path = temp_file.name
+            
+            result = self.converter.convert(image_path)
+            doc = result.document
+            
+            tables = []
+            for table in doc.tables:
+                table_data = {
+                    'rows': [],
+                    'num_rows': 0,
+                    'num_cols': 0,
+                }
+                
+                if hasattr(table, 'data') and table.data:
+                    table_data['num_rows'] = len(table.data)
+                    table_data['num_cols'] = max(len(row) for row in table.data) if table.data else 0
+                    
+                    for row in table.data:
+                        table_data['rows'].append([str(cell) if cell else '' for cell in row])
+                
+                tables.append(table_data)
+            
+            return tables
+            
+        except Exception as e:
+            warnings.warn(f"Docling table extraction failed: {e}")
+            return []
+        finally:
+            if temp_file:
+                try:
+                    os.remove(temp_file.name)
+                except:
+                    pass
+    
+    def align_text_to_grid(
+        self,
+        ocr_results: List[Dict],
+        rows: List[Dict],
+        columns: List[Dict],
+        method: str = 'iou'
+    ) -> List[List[str]]:
+        """
+        Align OCR text to a row-column grid structure.
+        
+        Same implementation as TableOCR for compatibility.
+        """
+        num_rows = len(rows)
+        num_cols = len(columns)
+        
+        if num_rows == 0 or num_cols == 0:
+            return []
+        
+        # Initialize grid
+        grid = [['' for _ in range(num_cols)] for _ in range(num_rows)]
+        
+        # Sort OCR results by y-coordinate (top to bottom), then x (left to right)
+        sorted_ocr = sorted(ocr_results, key=lambda x: (x['bbox'][1], x['bbox'][0]))
+        
+        for ocr_item in sorted_ocr:
+            text = ocr_item['text']
+            text_bbox = ocr_item['bbox']
+            
+            if method == 'iou':
+                row_idx, col_idx = self._find_cell_by_iou(text_bbox, rows, columns)
+            elif method == 'center':
+                row_idx, col_idx = self._find_cell_by_center(text_bbox, rows, columns)
+            else:  # hybrid
+                row_idx, col_idx = self._find_cell_hybrid(text_bbox, rows, columns)
+            
+            # Assign to grid
+            if row_idx >= 0 and col_idx >= 0:
+                if grid[row_idx][col_idx]:
+                    grid[row_idx][col_idx] += ' ' + text
+                else:
+                    grid[row_idx][col_idx] = text
+        
+        return grid
+    
+    def _find_cell_by_center(
+        self,
+        text_bbox: List[float],
+        rows: List[Dict],
+        columns: List[Dict]
+    ) -> Tuple[int, int]:
+        """Find cell using center point matching."""
+        text_center_x = (text_bbox[0] + text_bbox[2]) / 2
+        text_center_y = (text_bbox[1] + text_bbox[3]) / 2
+        
+        row_idx = -1
+        for i, row in enumerate(rows):
+            row_bbox = row['bbox']
+            if row_bbox[1] <= text_center_y <= row_bbox[3]:
+                row_idx = i
+                break
+        
+        col_idx = -1
+        for j, col in enumerate(columns):
+            col_bbox = col['bbox']
+            if col_bbox[0] <= text_center_x <= col_bbox[2]:
+                col_idx = j
+                break
+        
+        return row_idx, col_idx
+    
+    def _find_cell_by_iou(
+        self,
+        text_bbox: List[float],
+        rows: List[Dict],
+        columns: List[Dict]
+    ) -> Tuple[int, int]:
+        """Find cell using IoU matching."""
+        best_row_idx = -1
+        best_row_iou = 0
+        
+        for i, row in enumerate(rows):
+            row_bbox = row['bbox']
+            row_slice = [text_bbox[0], row_bbox[1], text_bbox[2], row_bbox[3]]
+            iou = self._calculate_iou(text_bbox, row_slice)
+            overlap_ratio = self._calculate_overlap_ratio(text_bbox, row_bbox, axis='y')
+            combined_score = iou * 0.3 + overlap_ratio * 0.7
+            
+            if combined_score > best_row_iou:
+                best_row_iou = combined_score
+                best_row_idx = i
+        
+        best_col_idx = -1
+        best_col_iou = 0
+        
+        for j, col in enumerate(columns):
+            col_bbox = col['bbox']
+            col_slice = [col_bbox[0], text_bbox[1], col_bbox[2], text_bbox[3]]
+            iou = self._calculate_iou(text_bbox, col_slice)
+            overlap_ratio = self._calculate_overlap_ratio(text_bbox, col_bbox, axis='x')
+            combined_score = iou * 0.3 + overlap_ratio * 0.7
+            
+            if combined_score > best_col_iou:
+                best_col_iou = combined_score
+                best_col_idx = j
+        
+        return best_row_idx, best_col_idx
+    
+    def _find_cell_hybrid(
+        self,
+        text_bbox: List[float],
+        rows: List[Dict],
+        columns: List[Dict]
+    ) -> Tuple[int, int]:
+        """Hybrid method: try IoU first, fall back to center."""
+        row_idx, col_idx = self._find_cell_by_iou(text_bbox, rows, columns)
+        
+        if row_idx < 0 or col_idx < 0:
+            center_row, center_col = self._find_cell_by_center(text_bbox, rows, columns)
+            if row_idx < 0:
+                row_idx = center_row
+            if col_idx < 0:
+                col_idx = center_col
+        
+        if row_idx < 0:
+            row_idx = self._find_closest_row(text_bbox, rows)
+        if col_idx < 0:
+            col_idx = self._find_closest_column(text_bbox, columns)
+        
+        return row_idx, col_idx
+    
+    def _find_closest_row(self, text_bbox: List[float], rows: List[Dict]) -> int:
+        """Find the closest row to the text."""
+        text_center_y = (text_bbox[1] + text_bbox[3]) / 2
+        min_dist = float('inf')
+        best_idx = -1
+        
+        for i, row in enumerate(rows):
+            row_bbox = row['bbox']
+            row_center_y = (row_bbox[1] + row_bbox[3]) / 2
+            dist = abs(text_center_y - row_center_y)
+            if dist < min_dist:
+                min_dist = dist
+                best_idx = i
+        
+        return best_idx
+    
+    def _find_closest_column(self, text_bbox: List[float], columns: List[Dict]) -> int:
+        """Find the closest column to the text."""
+        text_center_x = (text_bbox[0] + text_bbox[2]) / 2
+        min_dist = float('inf')
+        best_idx = -1
+        
+        for j, col in enumerate(columns):
+            col_bbox = col['bbox']
+            col_center_x = (col_bbox[0] + col_bbox[2]) / 2
+            dist = abs(text_center_x - col_center_x)
+            if dist < min_dist:
+                min_dist = dist
+                best_idx = j
+        
+        return best_idx
+    
+    def _calculate_overlap_ratio(
+        self,
+        bbox1: List[float],
+        bbox2: List[float],
+        axis: str = 'both'
+    ) -> float:
+        """Calculate what fraction of bbox1 overlaps with bbox2."""
+        if axis == 'x':
+            overlap_start = max(bbox1[0], bbox2[0])
+            overlap_end = min(bbox1[2], bbox2[2])
+            if overlap_end <= overlap_start:
+                return 0.0
+            text_width = bbox1[2] - bbox1[0]
+            if text_width <= 0:
+                return 0.0
+            return (overlap_end - overlap_start) / text_width
+        
+        elif axis == 'y':
+            overlap_start = max(bbox1[1], bbox2[1])
+            overlap_end = min(bbox1[3], bbox2[3])
+            if overlap_end <= overlap_start:
+                return 0.0
+            text_height = bbox1[3] - bbox1[1]
+            if text_height <= 0:
+                return 0.0
+            return (overlap_end - overlap_start) / text_height
+        
+        else:
+            intersection = self._calculate_overlap(bbox1, bbox2)
+            text_area = (bbox1[2] - bbox1[0]) * (bbox1[3] - bbox1[1])
+            if text_area <= 0:
+                return 0.0
+            return intersection / text_area
+    
+    def _calculate_overlap(self, bbox1: List[float], bbox2: List[float]) -> float:
+        """Calculate intersection area between two bounding boxes."""
+        x1 = max(bbox1[0], bbox2[0])
+        y1 = max(bbox1[1], bbox2[1])
+        x2 = min(bbox1[2], bbox2[2])
+        y2 = min(bbox1[3], bbox2[3])
+        
+        if x2 <= x1 or y2 <= y1:
+            return 0.0
+        
+        return (x2 - x1) * (y2 - y1)
+    
+    def _calculate_iou(self, bbox1: List[float], bbox2: List[float]) -> float:
+        """Calculate Intersection over Union for two bounding boxes."""
+        intersection = self._calculate_overlap(bbox1, bbox2)
+        area1 = (bbox1[2] - bbox1[0]) * (bbox1[3] - bbox1[1])
+        area2 = (bbox2[2] - bbox2[0]) * (bbox2[3] - bbox2[1])
+        union = area1 + area2 - intersection
+        
+        if union <= 0:
+            return 0.0
+        
+        return intersection / union
 
 
 if __name__ == '__main__':

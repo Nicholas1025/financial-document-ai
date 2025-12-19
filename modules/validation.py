@@ -29,6 +29,22 @@ class RowClassification:
     ADDITIONAL = 'additional'  # Items between subtotal and total
     TOTAL = 'total'
     EMPTY = 'empty'
+    SECTION_HEADER = 'section_header'  # e.g. "Non-current assets", "Current assets"
+
+
+# Section header patterns (rows that mark section boundaries)
+# NOTE: For cash flow statements, section headers like 'Operating activities' 
+# often have data in them, so we should NOT treat them as section headers.
+# Only truly empty-value rows should be section headers.
+_SECTION_HEADER_KEYWORDS = [
+    'non-current assets', 'current assets',
+    'non-current liabilities', 'current liabilities',
+    'shareholders equity', 'stockholders equity',
+    'equity attributable',
+    # 'operating activities', 'investing activities', 'financing activities',  # These have values in cash flow
+    'revenue', 'cost of sales', 'operating expenses',
+    'changes in working capital',  # Often a header with no values
+]
 
 
 def classify_row(label: str, row_values: List[Optional[float]], 
@@ -56,10 +72,27 @@ def classify_row(label: str, row_values: List[Optional[float]],
     
     # Total row keywords
     total_keywords = ['total assets', 'total liabilities', 'total equity', 
-                      'total revenue', 'grand total', 'net income', 'net profit']
+                      'total revenue', 'grand total', 'net income', 'net profit',
+                      # Cash flow statement endings
+                      'cash and cash equivalents at the end',
+                      'cash at end', 'closing cash',
+                      'at the end of the year', 'at end of year']
     for kw in total_keywords:
         if kw in label_lower:
             return RowClassification.TOTAL
+    
+    # Cash flow statement subtotal patterns (check before generic subtotal)
+    # Use regex-like matching to handle OCR errors (case variations)
+    import re
+    cashflow_subtotal_patterns = [
+        r'net\s*cash\s*flow.*?(from|used)',  # Net cash flow ... from/used
+        r'cash\s*flow\s*(from|used)',
+        r'net\s*(increase|decrease).*cash',
+        r'increase.*decrease.*cash',
+    ]
+    for pattern in cashflow_subtotal_patterns:
+        if re.search(pattern, label_lower):
+            return RowClassification.SUBTOTAL
     
     # Subtotal keywords
     subtotal_keywords = ['subtotal', 'sub-total', 'sub total']
@@ -73,17 +106,43 @@ def classify_row(label: str, row_values: List[Optional[float]],
     elif 'total' in label_lower:
         return RowClassification.SUBTOTAL
     
-    # Empty label but has values - might be subtotal
+    # Empty label but has values:
+    # - If near end (last 15% of rows), likely subtotal
+    # - Otherwise, treat as DATA (OCR may have missed the label)
     if not label and any(v is not None for v in row_values):
-        return RowClassification.SUBTOTAL
+        # Only classify as subtotal if in the last portion of the table
+        if position > total_rows * 0.85:
+            return RowClassification.SUBTOTAL
+        # Otherwise, it's likely a data row with missing label (OCR issue)
+        return RowClassification.DATA
+    
+    # Section header detection:
+    # Has a label but ALL numeric columns are empty → likely a section header
+    # e.g. "Non-current assets", "Current assets", "LIABILITIES"
+    if label and not any(v is not None for v in row_values):
+        # Check if it matches known section header patterns
+        for kw in _SECTION_HEADER_KEYWORDS:
+            if kw in label_lower:
+                return RowClassification.SECTION_HEADER
+        # Also treat short uppercase labels with no numbers as section headers
+        # e.g. "ASSETS", "LIABILITIES"
+        if label.isupper() and len(label) < 30:
+            return RowClassification.SECTION_HEADER
     
     return RowClassification.DATA
 
 
 def classify_all_rows(labels: List[str], 
-                      value_grid: List[List[Optional[float]]]) -> List[str]:
+                      value_grid: List[List[Optional[float]]],
+                      detect_implicit_subtotals: bool = True) -> List[str]:
     """
     Classify all rows in a table.
+    
+    Args:
+        labels: Row labels
+        value_grid: Grid of numeric values
+        detect_implicit_subtotals: If True, detect rows with empty labels 
+                                   that equal the sum of preceding rows
     
     Returns list of RowClassification types.
     """
@@ -94,6 +153,51 @@ def classify_all_rows(labels: List[str],
         row_values = value_grid[i] if i < len(value_grid) else []
         classification = classify_row(label, row_values, i, total_rows)
         classifications.append(classification)
+    
+    # Post-processing: detect implicit subtotals
+    # An implicit subtotal is a row with empty label whose value equals
+    # the sum of preceding DATA rows (since last subtotal/total/section_header)
+    if detect_implicit_subtotals:
+        for i in range(len(classifications)):
+            # Only check DATA rows with empty labels
+            if classifications[i] != RowClassification.DATA:
+                continue
+            if labels[i] and labels[i].strip():
+                continue  # Has a label, not implicit
+            
+            # Find start of component range (after last subtotal/total/section_header)
+            component_start = 0
+            for j in range(i - 1, -1, -1):
+                if classifications[j] in (RowClassification.SUBTOTAL, 
+                                          RowClassification.TOTAL,
+                                          RowClassification.SECTION_HEADER):
+                    component_start = j + 1
+                    break
+            
+            # Check if this row's value equals sum of preceding DATA rows
+            # for at least one numeric column
+            if component_start < i and len(value_grid) > i:
+                for col in range(len(value_grid[i])):
+                    row_val = value_grid[i][col] if col < len(value_grid[i]) else None
+                    if row_val is None:
+                        continue
+                    
+                    # Sum preceding DATA rows
+                    component_sum = 0.0
+                    component_count = 0
+                    for j in range(component_start, i):
+                        if classifications[j] == RowClassification.DATA:
+                            val = value_grid[j][col] if j < len(value_grid) and col < len(value_grid[j]) else None
+                            if val is not None:
+                                component_sum += val
+                                component_count += 1
+                    
+                    # If sum matches (within 1% tolerance) and we have at least 2 components
+                    if component_count >= 2 and abs(row_val) > 0:
+                        tolerance = 0.01 * abs(row_val)
+                        if abs(component_sum - row_val) <= tolerance:
+                            classifications[i] = RowClassification.SUBTOTAL
+                            break  # Found match, no need to check other columns
     
     return classifications
 
@@ -342,7 +446,9 @@ class TableValidator:
     
     def validate_column_sums_enhanced(self, value_grid: List[List[Optional[float]]], 
                                       labels: List[str],
-                                      row_classes: List[str]) -> List[Dict]:
+                                      row_classes: List[str],
+                                      include_empty_label_rows: bool = True,
+                                      debug: bool = False) -> List[Dict]:
         """
         Enhanced column sum validation using row classification.
         
@@ -353,11 +459,14 @@ class TableValidator:
             value_grid: Grid of numeric values
             labels: Row labels
             row_classes: Row classifications
+            include_empty_label_rows: If True, include rows with empty labels but valid numbers
+            debug: If True, include debug info about row inclusion decisions
             
         Returns:
             List of validation results
         """
         results = []
+        debug_info = [] if debug else None
         
         if not value_grid or not labels:
             return results
@@ -377,13 +486,66 @@ class TableValidator:
         # Validate subtotals (components -> subtotal)
         for subtotal_idx in subtotal_indices:
             # Find component rows (DATA rows before subtotal)
+            # Start from previous subtotal/total, but also respect section headers
             component_start = 0
             for prev_idx in subtotal_indices + total_indices:
                 if prev_idx < subtotal_idx and prev_idx > component_start:
                     component_start = prev_idx + 1
             
-            component_indices = [i for i in range(component_start, subtotal_idx)
-                                if row_classes[i] == RowClassification.DATA]
+            # CRITICAL FIX: Also look for section headers between component_start and subtotal_idx
+            # If there's a section header, start counting from AFTER that header
+            # This prevents mixing rows from different sections
+            for i in range(component_start, subtotal_idx):
+                if row_classes[i] == RowClassification.SECTION_HEADER:
+                    # Found a section header - start counting from after it
+                    component_start = i + 1
+            
+            # Include DATA rows; also include rows with empty labels if they have numeric values
+            component_indices = []
+            for i in range(component_start, subtotal_idx):
+                row_class = row_classes[i]
+                label = labels[i] if i < len(labels) else ''
+                has_numeric = any(self._get_value(value_grid, i, c) is not None 
+                                 for c in range(1, num_cols))
+                
+                # Skip section headers - they mark boundaries, not data
+                if row_class == RowClassification.SECTION_HEADER:
+                    if debug_info is not None:
+                        debug_info.append({
+                            'row_idx': i, 'label': label[:30] if label else '(empty)',
+                            'row_class': row_class, 'has_numeric': has_numeric,
+                            'included': False, 'reason': 'SECTION_HEADER (boundary)'
+                        })
+                    continue
+                
+                # Include if: DATA row, OR empty-label row with numeric values (if flag set)
+                include = False
+                reason = ''
+                if row_class == RowClassification.DATA:
+                    include = True
+                    reason = 'DATA row'
+                elif row_class == RowClassification.HEADER and has_numeric:
+                    # Some valid data rows get misclassified as HEADER
+                    include = True
+                    reason = 'HEADER with numeric (reclassified as DATA)'
+                elif include_empty_label_rows and not label and has_numeric:
+                    include = True
+                    reason = 'Empty label with numeric values'
+                else:
+                    reason = f'Excluded: class={row_class}, label={bool(label)}, numeric={has_numeric}'
+                
+                if include:
+                    component_indices.append(i)
+                
+                if debug_info is not None:
+                    debug_info.append({
+                        'row_idx': i,
+                        'label': label[:30] if label else '(empty)',
+                        'row_class': row_class,
+                        'has_numeric': has_numeric,
+                        'included': include,
+                        'reason': reason
+                    })
             
             if not component_indices:
                 continue
@@ -406,26 +568,57 @@ class TableValidator:
                     result['total_row_index'] = subtotal_idx
                     result['component_rows'] = [labels[i] if labels[i] else f'Row {i}' for i in component_indices]
                     result['component_count'] = len(component_values)
+                    if debug_info is not None:
+                        result['debug_row_selection'] = [d for d in debug_info if d['row_idx'] in range(component_start, subtotal_idx)]
                     results.append(result)
         
         # Validate totals with additional items (subtotal + additional -> total)
+        # Also handle grand totals: Total assets = Total non-current + Total current
         for total_idx in total_indices:
-            # Find preceding subtotal
-            preceding_subtotal = None
-            for st_idx in subtotal_indices:
-                if st_idx < total_idx:
-                    preceding_subtotal = st_idx
+            # Find ALL preceding subtotals (not just the last one)
+            # This handles: Total assets = Total non-current assets + Total current assets
+            preceding_subtotals = [st_idx for st_idx in subtotal_indices if st_idx < total_idx]
             
-            if preceding_subtotal is None:
+            # Find the nearest boundary (previous total or start)
+            boundary_start = 0
+            for prev_total in total_indices:
+                if prev_total < total_idx:
+                    boundary_start = prev_total + 1
+            
+            # Filter subtotals to only those after the boundary
+            relevant_subtotals = [st for st in preceding_subtotals if st >= boundary_start]
+            
+            if not relevant_subtotals:
                 # No subtotal, sum all data rows to total
-                component_indices = [i for i in range(0, total_idx)
+                component_indices = [i for i in range(boundary_start, total_idx)
                                     if row_classes[i] == RowClassification.DATA]
-            else:
-                # Find additional items between subtotal and total
+                
+                # Simple validation: sum data rows to total
+                for col in range(1, num_cols):
+                    component_values = [value_grid[i][col] for i in component_indices
+                                       if i < len(value_grid) and col < len(value_grid[i])
+                                       and value_grid[i][col] is not None]
+                    
+                    if not component_values:
+                        continue
+                    
+                    total_value = self._get_value(value_grid, total_idx, col)
+                    if total_value is not None:
+                        result = check_column_sum(component_values, total_value, self.tolerance)
+                        result['column'] = col
+                        result['row_type'] = 'total'
+                        result['total_row'] = labels[total_idx] if labels[total_idx] else f'Total (Row {total_idx})'
+                        result['total_row_index'] = total_idx
+                        result['component_rows'] = [labels[i] if labels[i] else f'Row {i}' for i in component_indices]
+                        result['component_count'] = len(component_values)
+                        results.append(result)
+            
+            elif len(relevant_subtotals) == 1:
+                # Single subtotal: Total = subtotal + additional items
+                preceding_subtotal = relevant_subtotals[0]
                 additional_indices = [i for i in range(preceding_subtotal + 1, total_idx)
                                      if row_classes[i] in (RowClassification.DATA, RowClassification.ADDITIONAL)]
                 
-                # Total should = subtotal + additional items
                 for col in range(1, num_cols):
                     subtotal_val = self._get_value(value_grid, preceding_subtotal, col)
                     additional_vals = [value_grid[i][col] for i in additional_indices
@@ -434,8 +627,6 @@ class TableValidator:
                     total_val = self._get_value(value_grid, total_idx, col)
                     
                     if subtotal_val is not None and total_val is not None:
-                        expected_total = subtotal_val + sum(additional_vals)
-                        
                         result = check_column_sum([subtotal_val] + additional_vals, total_val, self.tolerance)
                         result['column'] = col
                         result['row_type'] = 'total_with_additions'
@@ -445,28 +636,30 @@ class TableValidator:
                         result['subtotal_value'] = subtotal_val
                         result['additional_items'] = len(additional_vals)
                         results.append(result)
-                
-                continue  # Already handled
             
-            # Simple validation: sum data rows to total
-            for col in range(1, num_cols):
-                component_values = [value_grid[i][col] for i in component_indices
-                                   if i < len(value_grid) and col < len(value_grid[i])
-                                   and value_grid[i][col] is not None]
-                
-                if not component_values:
-                    continue
-                
-                total_value = self._get_value(value_grid, total_idx, col)
-                if total_value is not None:
-                    result = check_column_sum(component_values, total_value, self.tolerance)
-                    result['column'] = col
-                    result['row_type'] = 'total'
-                    result['total_row'] = labels[total_idx] if labels[total_idx] else f'Total (Row {total_idx})'
-                    result['total_row_index'] = total_idx
-                    result['component_rows'] = [labels[i] if labels[i] else f'Row {i}' for i in component_indices]
-                    result['component_count'] = len(component_values)
-                    results.append(result)
+            else:
+                # Multiple subtotals: Grand Total = sum of subtotals
+                # e.g. Total assets = Total non-current assets + Total current assets
+                for col in range(1, num_cols):
+                    subtotal_vals = []
+                    subtotal_labels = []
+                    for st_idx in relevant_subtotals:
+                        val = self._get_value(value_grid, st_idx, col)
+                        if val is not None:
+                            subtotal_vals.append(val)
+                            subtotal_labels.append(labels[st_idx] if labels[st_idx] else f'Subtotal (Row {st_idx})')
+                    
+                    total_val = self._get_value(value_grid, total_idx, col)
+                    
+                    if subtotal_vals and total_val is not None:
+                        result = check_column_sum(subtotal_vals, total_val, self.tolerance)
+                        result['column'] = col
+                        result['row_type'] = 'grand_total'
+                        result['total_row'] = labels[total_idx] if labels[total_idx] else f'Total (Row {total_idx})'
+                        result['total_row_index'] = total_idx
+                        result['subtotal_rows'] = subtotal_labels
+                        result['subtotal_count'] = len(subtotal_vals)
+                        results.append(result)
         
         return results
     

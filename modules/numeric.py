@@ -21,16 +21,19 @@ _UNIT_SCALES = {
     'k': 1_000,
     'thousand': 1_000,
     "'000": 1_000,
-    "000": 1_000,  # Handle RM'000 format
+    "000": 1_000,  
 }
 
 # Currency patterns (ASCII only tokens)
 _CURRENCY_PATTERNS = {
-    'USD': [r'\busd\b', r'\$', r'us\s*dollar'],
+    # Put more specific patterns before generic '$' to avoid misclassifying 'S$' as USD.
+    'SGD': [r'\bsgd\b', r's\$'],
+    # '$' is ambiguous; treat as USD only when it is not preceded by a letter (e.g., avoid 'S$').
+    'USD': [r'\busd\b', r'us\s*dollar', r'(?<![A-Za-z])\$'],
     'RM': [r'\brm\b', r'\bmyr\b', r'ringgit'],
+    # Euro symbol support
     'EUR': [r'\beur\b', r'euro', r'€'],
     'GBP': [r'\bgbp\b', r'£', r'\bpound\b', r'sterling'],
-    'SGD': [r'\bsgd\b', r's\$'],
     'AUD': [r'\baud\b', r'a\$'],
     'CAD': [r'\bcad\b', r'c\$'],
     'HKD': [r'\bhkd\b', r'hk\$'],
@@ -296,7 +299,7 @@ class ColumnMetadata:
         return f"ColumnMetadata(currency={self.currency}, scale={self.scale}, type={self.column_type}, year={self.year})"
 
 
-def extract_column_metadata(grid: List[List[str]], header_rows: int = 2) -> List[ColumnMetadata]:
+def extract_column_metadata(grid: List[List[str]], header_rows: int = 3) -> List[ColumnMetadata]:
     """
     Extract column metadata from header rows.
     
@@ -369,7 +372,7 @@ def extract_column_metadata(grid: List[List[str]], header_rows: int = 2) -> List
 
 def normalize_grid_with_metadata(grid: List[List[str]], 
                                   metadata: Optional[List[ColumnMetadata]] = None,
-                                  header_rows: int = 2) -> Tuple[List[List[Dict]], List[ColumnMetadata]]:
+                                  header_rows: int = 3) -> Tuple[List[List[Dict]], List[ColumnMetadata]]:
     """
     Normalize an entire grid using column metadata.
     

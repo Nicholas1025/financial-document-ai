@@ -58,22 +58,33 @@ class FinancialTablePipeline:
     End-to-end pipeline for financial table processing.
     """
 
-    def __init__(self, config_path: str = 'configs/config.yaml', use_v1_1: bool = True):
+    def __init__(self, config_path: str = 'configs/config.yaml', use_v1_1: bool = True,
+                 ocr_backend: str = 'paddleocr'):
         """
         Initialize the pipeline with models.
         
         Args:
             config_path: Path to configuration file
             use_v1_1: Whether to use v1.1 structure model (better for complex tables)
+            ocr_backend: OCR backend to use ('paddleocr' or 'docling')
         """
         self.config = load_config(config_path)
         self.config_path = config_path
         self.use_v1_1 = use_v1_1
+        self.ocr_backend_name = ocr_backend
+        
         # Keep structure recognizer in the main process (PyTorch).
         from .structure import TableStructureRecognizer
         self.structure_recognizer = TableStructureRecognizer(self.config, use_v1_1=use_v1_1)
-        # Stable default: keep PyTorch on GPU, run PaddleOCR on CPU (in a separate process).
-        self.ocr = TableOCR(lang='en', use_gpu=False)
+        
+        # Initialize OCR backend
+        from .ocr import get_ocr_backend, TableOCR
+        if ocr_backend.lower() in ('paddleocr', 'paddle'):
+            # Stable default: keep PyTorch on GPU, run PaddleOCR on CPU (in a separate process).
+            self.ocr = TableOCR(lang='en', use_gpu=False)
+        else:
+            self.ocr = get_ocr_backend(ocr_backend)
+        
         # Capture run metadata once at init
         self._run_meta = self._build_run_meta()
 
@@ -84,7 +95,8 @@ class FinancialTablePipeline:
             'git_commit': _get_git_commit(),
             'config_path': self.config_path,
             'model_version': 'v1.1' if self.use_v1_1 else 'v1.0',
-            'ocr_mode': 'isolated_cpu',
+            'ocr_backend': self.ocr_backend_name,
+            'ocr_mode': 'isolated_cpu' if self.ocr_backend_name.lower() in ('paddleocr', 'paddle') else 'direct',
             'device_info': _get_device_info(),
         }
 
@@ -198,7 +210,7 @@ class FinancialTablePipeline:
         Returns:
             Tuple of (normalized_grid, column_metadata)
         """
-        return normalize_grid_with_metadata(grid, header_rows=2)
+        return normalize_grid_with_metadata(grid, header_rows=3)
 
     def _cluster_centers(self, values: List[float], threshold: float) -> List[float]:
         centers = []

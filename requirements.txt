@@ -25,6 +25,9 @@ scikit-learn>=1.2.0
 paddlepaddle-gpu>=2.6.0
 paddleocr>=2.7.0
 
+# Alternative OCR backend (IBM Docling)
+docling>=2.65.0
+
 # Optional: OCR alternatives
 # pytesseract>=0.3.10
 
