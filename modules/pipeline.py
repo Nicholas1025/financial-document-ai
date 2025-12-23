@@ -71,7 +71,7 @@ class FinancialTablePipeline:
         self.config = load_config(config_path)
         self.config_path = config_path
         self.use_v1_1 = use_v1_1
-        self.ocr_backend_name = ocr_backend
+        self.ocr_backend = ocr_backend.lower()  # Store for later use
         
         # Keep structure recognizer in the main process (PyTorch).
         from .structure import TableStructureRecognizer
@@ -79,7 +79,7 @@ class FinancialTablePipeline:
         
         # Initialize OCR backend
         from .ocr import get_ocr_backend, TableOCR
-        if ocr_backend.lower() in ('paddleocr', 'paddle'):
+        if self.ocr_backend in ('paddleocr', 'paddle'):
             # Stable default: keep PyTorch on GPU, run PaddleOCR on CPU (in a separate process).
             self.ocr = TableOCR(lang='en', use_gpu=False)
         else:
@@ -95,8 +95,8 @@ class FinancialTablePipeline:
             'git_commit': _get_git_commit(),
             'config_path': self.config_path,
             'model_version': 'v1.1' if self.use_v1_1 else 'v1.0',
-            'ocr_backend': self.ocr_backend_name,
-            'ocr_mode': 'isolated_cpu' if self.ocr_backend_name.lower() in ('paddleocr', 'paddle') else 'direct',
+            'ocr_backend': self.ocr_backend,
+            'ocr_mode': 'isolated_cpu' if self.ocr_backend in ('paddleocr', 'paddle') else 'direct',
             'device_info': _get_device_info(),
         }
 
@@ -117,26 +117,39 @@ class FinancialTablePipeline:
         # Ensure consistent 3-channel input for structure model
         image = Image.open(image_path).convert('RGB')
         
-        # 1. Structure Recognition
-        structure = self.structure_recognizer.recognize(image)
+        # Check if using Docling - it provides direct table extraction
+        use_docling_tables = (self.ocr_backend == 'docling' and 
+                             hasattr(self.ocr, 'extract_table_grid'))
         
-        # 2. OCR
-        # Pass the file path to OCR so it can run in an isolated Paddle process
-        # on Windows GPU setups (avoids Torch/Paddle DLL conflicts).
-        ocr_results = self.ocr.extract_text(image_path)
-        
-        # 3. Grid Alignment
-        grid = self.ocr.align_text_to_grid(
-            ocr_results,
-            structure.get('rows', []),
-            structure.get('columns', []),
-            method='hybrid'
-        )
+        if use_docling_tables:
+            # Docling path: Use Docling's built-in table structure recognition
+            # This bypasses our Table Transformer since Docling has its own TableFormer
+            grid = self.ocr.extract_table_grid(image_path)
+            ocr_results = []  # Not needed for Docling path
+            
+            # Still run structure for metadata (optional)
+            structure = self.structure_recognizer.recognize(image)
+        else:
+            # PaddleOCR path: Use Table Transformer + OCR + Grid Alignment
+            # 1. Structure Recognition
+            structure = self.structure_recognizer.recognize(image)
+            
+            # 2. OCR
+            ocr_results = self.ocr.extract_text(image_path)
+            
+            # 3. Grid Alignment
+            grid = self.ocr.align_text_to_grid(
+                ocr_results,
+                structure.get('rows', []),
+                structure.get('columns', []),
+                method='hybrid'
+            )
 
         # Fallback: if structure failed to produce a sensible grid, build rows/cols from OCR only
         headers = []
         if not grid or len(grid) < 2 or (grid and len(grid[0]) < 2):
-            grid, headers = self._build_grid_from_ocr(ocr_results)
+            if not use_docling_tables:
+                grid, headers = self._build_grid_from_ocr(ocr_results)
         else:
             headers = self._collect_headers(grid)
             

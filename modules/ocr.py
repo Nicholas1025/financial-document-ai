@@ -779,15 +779,36 @@ class DoclingOCR(BaseOCR):
             # Extract text items with bounding boxes
             extracted = []
             
-            # Get text from document
-            # Docling provides structured output - we extract text blocks
+            # Extract from tables (primary source for financial documents)
+            for table in doc.tables:
+                if hasattr(table, 'data') and table.data:
+                    # Get cell bboxes if available
+                    table_cells = getattr(table.data, 'table_cells', [])
+                    
+                    for cell in table_cells:
+                        cell_text = cell.text if hasattr(cell, 'text') else str(cell)
+                        if not cell_text or not cell_text.strip():
+                            continue
+                        
+                        # Get bounding box
+                        bbox = [0, 0, 100, 20]
+                        if hasattr(cell, 'bbox') and cell.bbox:
+                            b = cell.bbox
+                            bbox = [b.l, b.t, b.r, b.b]
+                        
+                        extracted.append({
+                            'text': cell_text.strip(),
+                            'bbox': bbox,
+                            'confidence': 0.95
+                        })
+            
+            # Also get text from document texts (non-table content)
             for item in doc.texts:
                 text = item.text if hasattr(item, 'text') else str(item)
                 if not text or not text.strip():
                     continue
                 
-                # Get bounding box if available
-                bbox = [0, 0, 100, 20]  # Default bbox
+                bbox = [0, 0, 100, 20]
                 if hasattr(item, 'prov') and item.prov:
                     for prov in item.prov:
                         if hasattr(prov, 'bbox') and prov.bbox:
@@ -798,27 +819,67 @@ class DoclingOCR(BaseOCR):
                 extracted.append({
                     'text': text.strip(),
                     'bbox': bbox,
-                    'confidence': 0.95  # Docling doesn't provide confidence scores
+                    'confidence': 0.95
                 })
-            
-            # Also extract table cells if available
-            for table in doc.tables:
-                if hasattr(table, 'data') and table.data:
-                    for row_idx, row in enumerate(table.data):
-                        for col_idx, cell in enumerate(row):
-                            cell_text = str(cell) if cell else ''
-                            if cell_text.strip():
-                                # Approximate bbox based on position
-                                extracted.append({
-                                    'text': cell_text.strip(),
-                                    'bbox': [col_idx * 100, row_idx * 30, (col_idx + 1) * 100, (row_idx + 1) * 30],
-                                    'confidence': 0.95
-                                })
             
             return extracted
             
         except Exception as e:
             warnings.warn(f"Docling extraction failed: {e}. Returning empty results.")
+            return []
+        finally:
+            if temp_file:
+                try:
+                    os.remove(temp_file.name)
+                except:
+                    pass
+    
+    def extract_table_grid(self, image: Union[Image.Image, np.ndarray, str]) -> List[List[str]]:
+        """
+        Extract table as a grid directly using Docling's table model.
+        
+        This is more reliable than extract_text + align_text_to_grid for Docling,
+        since Docling already provides structured table data.
+        
+        Returns:
+            2D list of cell texts [row][col]
+        """
+        temp_file = None
+        try:
+            if isinstance(image, str):
+                image_path = image
+            else:
+                if isinstance(image, np.ndarray):
+                    image = Image.fromarray(image)
+                temp_file = tempfile.NamedTemporaryFile(suffix='.png', delete=False)
+                image.save(temp_file.name)
+                image_path = temp_file.name
+            
+            result = self.converter.convert(image_path)
+            doc = result.document
+            
+            if not doc.tables:
+                return []
+            
+            # Use the first table
+            table = doc.tables[0]
+            df = table.export_to_dataframe()
+            
+            # Convert DataFrame to grid
+            grid = []
+            
+            # Add header row
+            header = [str(col) for col in df.columns]
+            grid.append(header)
+            
+            # Add data rows
+            for _, row in df.iterrows():
+                grid.append([str(val) if val is not None else '' for val in row])
+            
+            return grid
+            
+        except Exception as e:
+            warnings.warn(f"Docling table extraction failed: {e}")
             return []
         finally:
             if temp_file:
