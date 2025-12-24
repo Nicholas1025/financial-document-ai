@@ -122,6 +122,7 @@ class FinTabNetLoader:
             'val': self.config['annotations']['val'],
             'test': self.config['annotations']['test']
         }
+        self.words_dir = self.config.get('words', None)
     
     def load_annotations(self, split: str = 'val', num_samples: Optional[int] = None) -> List[Dict]:
         """Load all XML annotations for a split."""
@@ -209,6 +210,50 @@ class FinTabNetLoader:
                 elements['cells'].append(obj['bbox'])
         
         return elements
+    
+    def get_words_path(self, filename: str) -> Optional[str]:
+        """Get path to words JSON file for a given image."""
+        if not self.words_dir:
+            return None
+        # filename: ADP_2008_page_12_table_0.jpg -> ADP_2008_page_12_table_0_words.json
+        base_name = Path(filename).stem  # Remove .jpg
+        words_file = f"{base_name}_words.json"
+        words_path = os.path.join(self.words_dir, words_file)
+        return words_path if os.path.exists(words_path) else None
+    
+    def load_words(self, filename: str) -> Optional[List[Dict]]:
+        """
+        Load ground truth words for a given image.
+        
+        Returns:
+            List of word dicts with 'text' and 'bbox' keys
+        """
+        words_path = self.get_words_path(filename)
+        if not words_path:
+            return None
+        
+        try:
+            with open(words_path, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+            # Handle both formats: list directly or {"value": [...]}
+            if isinstance(data, list):
+                return data
+            return data.get('value', [])
+        except Exception as e:
+            print(f"Error loading words from {words_path}: {e}")
+            return None
+    
+    def get_ground_truth_text(self, filename: str) -> Optional[str]:
+        """
+        Get concatenated ground truth text for OCR comparison.
+        
+        Returns:
+            All words concatenated with spaces
+        """
+        words = self.load_words(filename)
+        if not words:
+            return None
+        return ' '.join(w['text'] for w in words if w.get('text'))
 
 
 class DocLayNetLoader:
