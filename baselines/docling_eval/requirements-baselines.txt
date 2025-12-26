@@ -1,0 +1,32 @@
+# Baseline Dependencies - Pinned Versions
+# =========================================
+# This file locks the versions of external baseline dependencies
+# to ensure reproducibility.
+
+# Docling Eval - Table Structure Evaluation
+# GitHub: https://github.com/docling-project/docling-eval
+# Commit: 629a451d7b75e274352a1f21710316e47fc7a80a (2024-06)
+docling-eval>=0.3.0
+
+# Core Docling dependencies
+docling>=2.0.0
+docling-core>=2.0.0
+
+# TEDS computation
+apted>=1.0.3
+distance>=0.1.3
+lxml>=4.9.0
+
+# Dataset handling
+datasets>=2.14.0
+huggingface-hub>=0.16.0
+
+# Visualization
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# Utilities
+pydantic>=2.0.0
+tqdm>=4.65.0
+pandas>=2.0.0
+numpy>=1.24.0

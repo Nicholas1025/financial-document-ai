@@ -59,3 +59,7 @@ data/samples/*.pdf
 # Secrets
 .env
 *.key
+
+/baselines/docling_eval/stage1_results/*
+/baselines/docling_eval/test_run/*
+/baselines/docling_eval/stage2_results/*

@@ -1,0 +1,117 @@
+{
+  "config": {
+    "method": "TableFormer Direct",
+    "description": "Direct TableFormer prediction on table images (same as docling-eval)",
+    "data_dir": "D:/datasets/FinTabNet_OTSL/data",
+    "num_samples": 10,
+    "docling_version": "unknown"
+  },
+  "summary": {
+    "mean_teds": 0.0,
+    "successful": 0,
+    "total": 10,
+    "success_rate": 0.0
+  },
+  "results": [
+    {
+      "filename": "HAL.2015.page_43.pdf_125177",
+      "pred_rows": 0,
+      "pred_cols": 0,
+      "gt_rows": 32,
+      "gt_cols": 4,
+      "teds": 0.0,
+      "elapsed_time": 9.665598,
+      "error": null
+    },
+    {
+      "filename": "HAL.2009.page_77.pdf_125051",
+      "pred_rows": 0,
+      "pred_cols": 0,
+      "gt_rows": 8,
+      "gt_cols": 2,
+      "teds": 0.0,
+      "elapsed_time": 2.950737,
+      "error": null
+    },
+    {
+      "filename": "HAL.2017.page_79.pdf_125247",
+      "pred_rows": 0,
+      "pred_cols": 0,
+      "gt_rows": 3,
+      "gt_cols": 3,
+      "teds": 0.0,
+      "elapsed_time": 1.76115,
+      "error": null
+    },
+    {
+      "filename": "HAL.2005.page_92.pdf_125215",
+      "pred_rows": 0,
+      "pred_cols": 0,
+      "gt_rows": 5,
+      "gt_cols": 3,
+      "teds": 0.0,
+      "elapsed_time": 1.993944,
+      "error": null
+    },
+    {
+      "filename": "HAL.2014.page_40.pdf_125088",
+      "pred_rows": 0,
+      "pred_cols": 0,
+      "gt_rows": 8,
+      "gt_cols": 4,
+      "teds": 0.0,
+      "elapsed_time": 4.803428,
+      "error": null
+    },
+    {
+      "filename": "HAL.2009.page_49.pdf_125043",
+      "pred_rows": 0,
+      "pred_cols": 0,
+      "gt_rows": 6,
+      "gt_cols": 2,
+      "teds": 0.0,
+      "elapsed_time": 2.391574,
+      "error": null
+    },
+    {
+      "filename": "HAL.2015.page_42.pdf_125176",
+      "pred_rows": 0,
+      "pred_cols": 0,
+      "gt_rows": 4,
+      "gt_cols": 4,
+      "teds": 0.0,
+      "elapsed_time": 2.128443,
+      "error": null
+    },
+    {
+      "filename": "HAL.2015.page_76.pdf_125185",
+      "pred_rows": 0,
+      "pred_cols": 0,
+      "gt_rows": 8,
+      "gt_cols": 2,
+      "teds": 0.0,
+      "elapsed_time": 2.608573,
+      "error": null
+    },
+    {
+      "filename": "HAL.2004.page_82.pdf_125317",
+      "pred_rows": 0,
+      "pred_cols": 0,
+      "gt_rows": 5,
+      "gt_cols": 2,
+      "teds": 0.0,
+      "elapsed_time": 2.149431,
+      "error": null
+    },
+    {
+      "filename": "HAL.2008.page_78.pdf_125276",
+      "pred_rows": 0,
+      "pred_cols": 0,
+      "gt_rows": 9,
+      "gt_cols": 2,
+      "teds": 0.0,
+      "elapsed_time": 3.286374,
+      "error": null
+    }
+  ]
+}
