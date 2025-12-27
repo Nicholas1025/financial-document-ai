@@ -1,0 +1,22 @@
+{
+  "step": 4,
+  "task": "Numeric Normalisation",
+  "dataset": "SynFinTabs",
+  "split": "test",
+  "num_tables": 1000,
+  "num_values": 25553,
+  "ground_truth": "Numeric values from SynFinTabs QA pairs (formatted strings)",
+  "evaluation_metric": "Exact Match, Relative Error, Scale Accuracy, Sign Accuracy",
+  "timestamp": "2025-12-28T00:04:40.129777",
+  "results": {
+    "exact_match_rate": 100.0,
+    "scale_accuracy": 100.0,
+    "sign_accuracy": 100.0,
+    "mean_relative_error": 0.0,
+    "median_relative_error": 0.0
+  },
+  "error_breakdown": {
+    "none": 25553
+  },
+  "histogram_path": "C:\\Users\\User\\Documents\\financial-document-ai\\baselines\\docling_eval\\benchmark_results\\figures\\step4_numeric_error_histogram.png"
+}

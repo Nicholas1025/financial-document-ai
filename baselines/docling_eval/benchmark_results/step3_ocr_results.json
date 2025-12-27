@@ -1,0 +1,21 @@
+{
+  "step": 3,
+  "task": "OCR (Optical Character Recognition)",
+  "dataset": "PubTabNet",
+  "split": "val",
+  "num_samples": 1000,
+  "total_cells": 66776,
+  "ground_truth": "Character-level cell text from PubTabNet JSONL annotations",
+  "evaluation_metric": "CER (Character Error Rate), WER (Word Error Rate), Exact Match Rate",
+  "matching_method": "Merge all OCR boxes overlapping >30% with GT cell bbox",
+  "timestamp": "2025-12-28T04:29:45.766539",
+  "results": {
+    "PaddleOCR": {
+      "exact_match_rate": 70.47,
+      "avg_cer": 15.64,
+      "avg_wer": 23.85,
+      "accuracy": 84.36
+    }
+  },
+  "histogram_path": "C:\\Users\\User\\Documents\\financial-document-ai\\baselines\\docling_eval\\benchmark_results\\figures\\step3_ocr_cer_histogram.png"
+}

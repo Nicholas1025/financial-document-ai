@@ -1,0 +1,27 @@
+{
+  "step": 2,
+  "task": "Table Structure Recognition",
+  "dataset": "FinTabNet OTSL",
+  "split": "test",
+  "num_samples": 1000,
+  "ground_truth": "HTML table structure from FinTabNet annotations",
+  "evaluation_metric": "TEDS (Tree Edit Distance Similarity) - structural only",
+  "timestamp": "2025-12-28T01:44:58.439356",
+  "results": {
+    "Table Transformer v1.1": {
+      "mean_teds": 0.8293,
+      "std_teds": 0.0904,
+      "median_teds": 0.8468,
+      "min_teds": 0.3625,
+      "max_teds": 0.9692
+    },
+    "Docling TableFormer": {
+      "mean_teds": 0.8137,
+      "std_teds": 0.1104,
+      "median_teds": 0.8333,
+      "min_teds": 0.012,
+      "max_teds": 0.9716
+    }
+  },
+  "histogram_path": "C:\\Users\\User\\Documents\\financial-document-ai\\baselines\\docling_eval\\benchmark_results\\figures\\step2_tsr_teds_histogram.png"
+}

@@ -1,0 +1,33 @@
+{
+  "step": 1,
+  "task": "Table Detection",
+  "dataset": "DocLayNet",
+  "split": "val",
+  "num_samples": 1000,
+  "ground_truth": "COCO format annotations with table bounding boxes",
+  "evaluation_metric": "Precision, Recall, F1 @ IoU 0.5",
+  "timestamp": "2025-12-28T00:19:13.207702",
+  "results": {
+    "Table Transformer": {
+      "precision": 0.7961,
+      "recall": 0.6591,
+      "f1": 0.7212,
+      "avg_iou": 0.8665,
+      "tp": 992,
+      "fp": 254,
+      "fn": 513,
+      "avg_time_ms": 130.3
+    },
+    "Docling LayoutPredictor": {
+      "precision": 0.9006,
+      "recall": 0.8066,
+      "f1": 0.851,
+      "avg_iou": 0.9613,
+      "tp": 1214,
+      "fp": 134,
+      "fn": 291,
+      "avg_time_ms": 199.4
+    }
+  },
+  "histogram_path": "C:\\Users\\User\\Documents\\financial-document-ai\\baselines\\docling_eval\\benchmark_results\\figures\\step1_detection_f1_histogram.png"
+}

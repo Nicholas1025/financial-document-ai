@@ -1,0 +1,93 @@
+{
+  "step": 5,
+  "task": "Semantic Cell Classification",
+  "dataset": "SynFinTabs",
+  "split": "test",
+  "num_tables": 1000,
+  "num_cells": 73190,
+  "cell_types": [
+    "section_title",
+    "column_header",
+    "row_header",
+    "data",
+    "currency_unit"
+  ],
+  "ground_truth": "Cell labels from SynFinTabs (section_title, column_header, row_header, data, currency_unit)",
+  "evaluation_metric": "Accuracy, Macro F1, Per-class Precision/Recall/F1",
+  "timestamp": "2025-12-28T00:07:15.491269",
+  "results": {
+    "Heuristic": {
+      "accuracy": 97.01,
+      "macro_f1": 89.0,
+      "per_class": {
+        "section_title": {
+          "precision": 84.77,
+          "recall": 34.51,
+          "f1": 49.06,
+          "support": 3048
+        },
+        "column_header": {
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0,
+          "support": 2280
+        },
+        "row_header": {
+          "precision": 96.4,
+          "recall": 98.6,
+          "f1": 97.49,
+          "support": 13616
+        },
+        "data": {
+          "precision": 96.99,
+          "recall": 100.0,
+          "f1": 98.47,
+          "support": 48150
+        },
+        "currency_unit": {
+          "precision": 99.98,
+          "recall": 100.0,
+          "f1": 99.99,
+          "support": 6096
+        }
+      }
+    },
+    "Position-only": {
+      "accuracy": 81.98,
+      "macro_f1": 50.68,
+      "per_class": {
+        "section_title": {
+          "precision": 0,
+          "recall": 0.0,
+          "f1": 0,
+          "support": 3048
+        },
+        "column_header": {
+          "precision": 69.51,
+          "recall": 100.0,
+          "f1": 82.01,
+          "support": 2280
+        },
+        "row_header": {
+          "precision": 69.07,
+          "recall": 100.0,
+          "f1": 81.71,
+          "support": 13616
+        },
+        "data": {
+          "precision": 87.86,
+          "recall": 91.59,
+          "f1": 89.69,
+          "support": 48150
+        },
+        "currency_unit": {
+          "precision": 0,
+          "recall": 0.0,
+          "f1": 0,
+          "support": 6096
+        }
+      }
+    }
+  },
+  "histogram_path": "C:\\Users\\User\\Documents\\financial-document-ai\\baselines\\docling_eval\\benchmark_results\\figures\\step5_semantic_f1_barchart.png"
+}
