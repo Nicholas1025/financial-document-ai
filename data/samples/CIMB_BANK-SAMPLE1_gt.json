@@ -1,0 +1,149 @@
+{
+  "image": "CIMB_BANK-SAMPLE1.png",
+  "description": "CIMB Bank Assets Statement - Balance Sheet Extract",
+  "table": {
+    "num_rows": 26,
+    "num_cols": 4
+  },
+  "cells": [
+    {"row": 0, "col": 0, "text": "", "semantic_type": "column_header"},
+    {"row": 0, "col": 1, "text": "Note", "semantic_type": "column_header"},
+    {"row": 0, "col": 2, "text": "2024 RM'000", "semantic_type": "column_header"},
+    {"row": 0, "col": 3, "text": "2023 RM'000", "semantic_type": "column_header"},
+    
+    {"row": 1, "col": 0, "text": "ASSETS", "semantic_type": "section_title"},
+    {"row": 1, "col": 1, "text": "", "semantic_type": "data"},
+    {"row": 1, "col": 2, "text": "", "semantic_type": "data"},
+    {"row": 1, "col": 3, "text": "", "semantic_type": "data"},
+    
+    {"row": 2, "col": 0, "text": "Cash and short-term funds", "semantic_type": "row_header"},
+    {"row": 2, "col": 1, "text": "2", "numeric_value": 2, "semantic_type": "data"},
+    {"row": 2, "col": 2, "text": "29,608,638", "numeric_value": 29608638, "semantic_type": "data"},
+    {"row": 2, "col": 3, "text": "34,772,470", "numeric_value": 34772470, "semantic_type": "data"},
+    
+    {"row": 3, "col": 0, "text": "Reverse repurchase agreements/reverse Collateralised Commodity Murabahah", "semantic_type": "row_header"},
+    {"row": 3, "col": 1, "text": "3", "numeric_value": 3, "semantic_type": "data"},
+    {"row": 3, "col": 2, "text": "10,882,458", "numeric_value": 10882458, "semantic_type": "data"},
+    {"row": 3, "col": 3, "text": "9,707,692", "numeric_value": 9707692, "semantic_type": "data"},
+    
+    {"row": 4, "col": 0, "text": "Deposits and placements with banks and other financial institutions", "semantic_type": "row_header"},
+    {"row": 4, "col": 1, "text": "4", "numeric_value": 4, "semantic_type": "data"},
+    {"row": 4, "col": 2, "text": "5,167,779", "numeric_value": 5167779, "semantic_type": "data"},
+    {"row": 4, "col": 3, "text": "3,207,618", "numeric_value": 3207618, "semantic_type": "data"},
+    
+    {"row": 5, "col": 0, "text": "Financial investments at fair value through profit or loss", "semantic_type": "row_header"},
+    {"row": 5, "col": 1, "text": "5", "numeric_value": 5, "semantic_type": "data"},
+    {"row": 5, "col": 2, "text": "52,683,146", "numeric_value": 52683146, "semantic_type": "data"},
+    {"row": 5, "col": 3, "text": "48,622,731", "numeric_value": 48622731, "semantic_type": "data"},
+    
+    {"row": 6, "col": 0, "text": "Debt instruments at fair value through other comprehensive income", "semantic_type": "row_header"},
+    {"row": 6, "col": 1, "text": "6", "numeric_value": 6, "semantic_type": "data"},
+    {"row": 6, "col": 2, "text": "78,881,355", "numeric_value": 78881355, "semantic_type": "data"},
+    {"row": 6, "col": 3, "text": "71,417,298", "numeric_value": 71417298, "semantic_type": "data"},
+    
+    {"row": 7, "col": 0, "text": "Equity instruments at fair value through other comprehensive income", "semantic_type": "row_header"},
+    {"row": 7, "col": 1, "text": "7", "numeric_value": 7, "semantic_type": "data"},
+    {"row": 7, "col": 2, "text": "393,289", "numeric_value": 393289, "semantic_type": "data"},
+    {"row": 7, "col": 3, "text": "306,171", "numeric_value": 306171, "semantic_type": "data"},
+    
+    {"row": 8, "col": 0, "text": "Debt instruments at amortised cost", "semantic_type": "row_header"},
+    {"row": 8, "col": 1, "text": "8", "numeric_value": 8, "semantic_type": "data"},
+    {"row": 8, "col": 2, "text": "78,663,456", "numeric_value": 78663456, "semantic_type": "data"},
+    {"row": 8, "col": 3, "text": "78,498,195", "numeric_value": 78498195, "semantic_type": "data"},
+    
+    {"row": 9, "col": 0, "text": "Derivative financial instruments", "semantic_type": "row_header"},
+    {"row": 9, "col": 1, "text": "9", "numeric_value": 9, "semantic_type": "data"},
+    {"row": 9, "col": 2, "text": "15,022,058", "numeric_value": 15022058, "semantic_type": "data"},
+    {"row": 9, "col": 3, "text": "15,644,895", "numeric_value": 15644895, "semantic_type": "data"},
+    
+    {"row": 10, "col": 0, "text": "Loans, advances and financing", "semantic_type": "row_header"},
+    {"row": 10, "col": 1, "text": "10", "numeric_value": 10, "semantic_type": "data"},
+    {"row": 10, "col": 2, "text": "442,163,479", "numeric_value": 442163479, "semantic_type": "data"},
+    {"row": 10, "col": 3, "text": "429,450,037", "numeric_value": 429450037, "semantic_type": "data"},
+    
+    {"row": 11, "col": 0, "text": "Other assets", "semantic_type": "row_header"},
+    {"row": 11, "col": 1, "text": "11", "numeric_value": 11, "semantic_type": "data"},
+    {"row": 11, "col": 2, "text": "16,005,996", "numeric_value": 16005996, "semantic_type": "data"},
+    {"row": 11, "col": 3, "text": "14,648,900", "numeric_value": 14648900, "semantic_type": "data"},
+    
+    {"row": 12, "col": 0, "text": "Tax recoverable", "semantic_type": "row_header"},
+    {"row": 12, "col": 1, "text": "", "semantic_type": "data"},
+    {"row": 12, "col": 2, "text": "416,795", "numeric_value": 416795, "semantic_type": "data"},
+    {"row": 12, "col": 3, "text": "340,804", "numeric_value": 340804, "semantic_type": "data"},
+    
+    {"row": 13, "col": 0, "text": "Deferred tax assets", "semantic_type": "row_header"},
+    {"row": 13, "col": 1, "text": "12", "numeric_value": 12, "semantic_type": "data"},
+    {"row": 13, "col": 2, "text": "1,400,940", "numeric_value": 1400940, "semantic_type": "data"},
+    {"row": 13, "col": 3, "text": "1,934,311", "numeric_value": 1934311, "semantic_type": "data"},
+    
+    {"row": 14, "col": 0, "text": "Statutory deposits with central banks", "semantic_type": "row_header"},
+    {"row": 14, "col": 1, "text": "13", "numeric_value": 13, "semantic_type": "data"},
+    {"row": 14, "col": 2, "text": "10,647,286", "numeric_value": 10647286, "semantic_type": "data"},
+    {"row": 14, "col": 3, "text": "11,511,391", "numeric_value": 11511391, "semantic_type": "data"},
+    
+    {"row": 15, "col": 0, "text": "Investment in associates", "semantic_type": "row_header"},
+    {"row": 15, "col": 1, "text": "15", "numeric_value": 15, "semantic_type": "data"},
+    {"row": 15, "col": 2, "text": "55,340", "numeric_value": 55340, "semantic_type": "data"},
+    {"row": 15, "col": 3, "text": "94,159", "numeric_value": 94159, "semantic_type": "data"},
+    
+    {"row": 16, "col": 0, "text": "Investment in joint ventures", "semantic_type": "row_header"},
+    {"row": 16, "col": 1, "text": "16", "numeric_value": 16, "semantic_type": "data"},
+    {"row": 16, "col": 2, "text": "2,279,622", "numeric_value": 2279622, "semantic_type": "data"},
+    {"row": 16, "col": 3, "text": "2,302,366", "numeric_value": 2302366, "semantic_type": "data"},
+    
+    {"row": 17, "col": 0, "text": "Property, plant and equipment", "semantic_type": "row_header"},
+    {"row": 17, "col": 1, "text": "17", "numeric_value": 17, "semantic_type": "data"},
+    {"row": 17, "col": 2, "text": "1,962,762", "numeric_value": 1962762, "semantic_type": "data"},
+    {"row": 17, "col": 3, "text": "2,055,295", "numeric_value": 2055295, "semantic_type": "data"},
+    
+    {"row": 18, "col": 0, "text": "Right-of-use assets", "semantic_type": "row_header"},
+    {"row": 18, "col": 1, "text": "18", "numeric_value": 18, "semantic_type": "data"},
+    {"row": 18, "col": 2, "text": "590,481", "numeric_value": 590481, "semantic_type": "data"},
+    {"row": 18, "col": 3, "text": "658,562", "numeric_value": 658562, "semantic_type": "data"},
+    
+    {"row": 19, "col": 0, "text": "Investment properties", "semantic_type": "row_header"},
+    {"row": 19, "col": 1, "text": "19", "numeric_value": 19, "semantic_type": "data"},
+    {"row": 19, "col": 2, "text": "8,485", "numeric_value": 8485, "semantic_type": "data"},
+    {"row": 19, "col": 3, "text": "2,758", "numeric_value": 2758, "semantic_type": "data"},
+    
+    {"row": 20, "col": 0, "text": "Goodwill", "semantic_type": "row_header"},
+    {"row": 20, "col": 1, "text": "20", "numeric_value": 20, "semantic_type": "data"},
+    {"row": 20, "col": 2, "text": "6,370,826", "numeric_value": 6370826, "semantic_type": "data"},
+    {"row": 20, "col": 3, "text": "6,475,948", "numeric_value": 6475948, "semantic_type": "data"},
+    
+    {"row": 21, "col": 0, "text": "Intangible assets", "semantic_type": "row_header"},
+    {"row": 21, "col": 1, "text": "21", "numeric_value": 21, "semantic_type": "data"},
+    {"row": 21, "col": 2, "text": "1,926,512", "numeric_value": 1926512, "semantic_type": "data"},
+    {"row": 21, "col": 3, "text": "1,914,967", "numeric_value": 1914967, "semantic_type": "data"},
+    
+    {"row": 22, "col": 0, "text": "", "semantic_type": "data"},
+    {"row": 22, "col": 1, "text": "", "semantic_type": "data"},
+    {"row": 22, "col": 2, "text": "755,130,703", "numeric_value": 755130703, "semantic_type": "subtotal"},
+    {"row": 22, "col": 3, "text": "733,566,568", "numeric_value": 733566568, "semantic_type": "subtotal"},
+    
+    {"row": 23, "col": 0, "text": "Non-current assets held for sale", "semantic_type": "row_header"},
+    {"row": 23, "col": 1, "text": "56", "numeric_value": 56, "semantic_type": "data"},
+    {"row": 23, "col": 2, "text": "-", "numeric_value": null, "semantic_type": "data"},
+    {"row": 23, "col": 3, "text": "5,584", "numeric_value": 5584, "semantic_type": "data"},
+    
+    {"row": 24, "col": 0, "text": "Total assets", "semantic_type": "total_row"},
+    {"row": 24, "col": 1, "text": "", "semantic_type": "data"},
+    {"row": 24, "col": 2, "text": "755,130,703", "numeric_value": 755130703, "semantic_type": "data"},
+    {"row": 24, "col": 3, "text": "733,572,152", "numeric_value": 733572152, "semantic_type": "data"}
+  ],
+  "validation_rules": [
+    {
+      "type": "subtotal_check",
+      "description": "Subtotal (row 22) should equal sum of rows 2-21",
+      "expected_2024": 755130703,
+      "expected_2023": 733566568
+    },
+    {
+      "type": "total_check",
+      "description": "Total assets = Subtotal + Non-current assets held for sale",
+      "formula": "row22 + row23 = row24",
+      "expected_2024": 755130703,
+      "expected_2023": 733572152
+    }
+  ]
+}

@@ -208,7 +208,7 @@ Classify table cells into semantic categories (header, data, etc.).
 1. **Heuristic** (rule-based: row 0 = column_header, col 0 = row_header, etc.)
 2. **Position-only** (uses only row/column position, no content analysis)
 
-### Evaluation Metric
+### Evaluation Metric 
 - Accuracy
 - Macro F1
 - Per-class Precision/Recall/F1

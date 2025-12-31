@@ -4,6 +4,15 @@ venv/
 env/
 .env/
 
+# API Keys & Credentials (IMPORTANT: Never commit these!)
+configs/gemini_service_account.json
+configs/*_service_account.json
+configs/*.json
+!configs/config.yaml
+*.pem
+*.key
+service_account*.json
+
 # Output files
 outputs/
 *.log
