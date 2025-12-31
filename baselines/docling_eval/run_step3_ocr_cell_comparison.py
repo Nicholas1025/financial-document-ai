@@ -47,6 +47,22 @@ def calculate_iou(box1: List[float], box2: List[float]) -> float:
     return intersection / union if union > 0 else 0.0
 
 
+def calculate_containment(small_box: List[float], large_box: List[float]) -> float:
+    """Calculate how much of small_box is contained in large_box"""
+    x1 = max(small_box[0], large_box[0])
+    y1 = max(small_box[1], large_box[1])
+    x2 = min(small_box[2], large_box[2])
+    y2 = min(small_box[3], large_box[3])
+    
+    if x2 <= x1 or y2 <= y1:
+        return 0.0
+    
+    intersection = (x2 - x1) * (y2 - y1)
+    small_area = (small_box[2] - small_box[0]) * (small_box[3] - small_box[1])
+    
+    return intersection / small_area if small_area > 0 else 0.0
+
+
 def levenshtein_distance(s1: str, s2: str) -> int:
     """Calculate Levenshtein distance"""
     if len(s1) < len(s2):
@@ -80,31 +96,29 @@ def normalize_text(text: str) -> str:
 
 
 def match_ocr_to_gt(gt_words: List[Dict], ocr_results: List[Dict], 
-                    iou_threshold: float = 0.3) -> List[Tuple[Dict, Optional[Dict], float]]:
-    """Match OCR results to GT words based on bbox IoU"""
+                    containment_threshold: float = 0.5) -> List[Tuple[Dict, Optional[Dict], float]]:
+    """
+    Match OCR results to GT words based on bbox containment.
+    Since GT is word-level and OCR is line-level, we check if GT word is contained in OCR line.
+    """
     matches = []
-    used_ocr = set()
     
     for gt_word in gt_words:
         gt_bbox = gt_word['bbox']  # [x1, y1, x2, y2]
         best_match = None
-        best_iou = 0.0
-        best_idx = -1
+        best_containment = 0.0
         
-        for idx, ocr_result in enumerate(ocr_results):
-            if idx in used_ocr:
-                continue
+        for ocr_result in ocr_results:
             ocr_bbox = ocr_result['bbox']
-            iou = calculate_iou(gt_bbox, ocr_bbox)
+            # Check how much of GT word is contained in OCR bbox
+            containment = calculate_containment(gt_bbox, ocr_bbox)
             
-            if iou > best_iou:
-                best_iou = iou
+            if containment > best_containment:
+                best_containment = containment
                 best_match = ocr_result
-                best_idx = idx
         
-        if best_iou >= iou_threshold and best_idx >= 0:
-            used_ocr.add(best_idx)
-            matches.append((gt_word, best_match, best_iou))
+        if best_containment >= containment_threshold:
+            matches.append((gt_word, best_match, best_containment))
         else:
             matches.append((gt_word, None, 0.0))
     
@@ -150,8 +164,8 @@ def run_paddleocr_on_image(ocr, img_path: str) -> List[Dict]:
 
 
 def evaluate_single_image(gt_words: List[Dict], ocr_words: List[Dict]) -> Dict:
-    """Evaluate OCR on single image using cell-by-cell matching"""
-    matches = match_ocr_to_gt(gt_words, ocr_words, iou_threshold=0.3)
+    """Evaluate OCR on single image using containment-based matching"""
+    matches = match_ocr_to_gt(gt_words, ocr_words, containment_threshold=0.5)
     
     total_cells = len(gt_words)
     matched_cells = 0
@@ -159,17 +173,37 @@ def evaluate_single_image(gt_words: List[Dict], ocr_words: List[Dict]) -> Dict:
     cer_sum = 0.0
     
     cell_results = []
-    for gt_word, ocr_match, iou in matches:
+    for gt_word, ocr_match, containment in matches:
         gt_text = normalize_text(gt_word['text'])
         
         if ocr_match is None:
             pred_text = ""
             cer = 1.0
         else:
-            pred_text = normalize_text(ocr_match['text'])
-            cer = calculate_cer(gt_text, pred_text)
+            # OCR is line-level, check if GT word appears in OCR text
+            ocr_text = normalize_text(ocr_match['text'])
+            
+            # Try to find best matching word in OCR text
+            ocr_words_list = ocr_text.split()
+            best_cer = 1.0
+            best_pred = ""
+            
+            for ocr_word in ocr_words_list:
+                word_cer = calculate_cer(gt_text, ocr_word)
+                if word_cer < best_cer:
+                    best_cer = word_cer
+                    best_pred = ocr_word
+            
+            # Also try exact substring match
+            if gt_text in ocr_text:
+                best_cer = 0.0
+                best_pred = gt_text
+            
+            pred_text = best_pred
+            cer = best_cer
             matched_cells += 1
-            if gt_text == pred_text:
+            
+            if cer == 0.0:
                 exact_matches += 1
         
         cer_sum += cer
@@ -178,7 +212,7 @@ def evaluate_single_image(gt_words: List[Dict], ocr_words: List[Dict]) -> Dict:
             'pred': pred_text,
             'cer': cer,
             'matched': ocr_match is not None,
-            'iou': iou
+            'containment': containment
         })
     
     return {
@@ -371,10 +405,11 @@ def main():
 
 ## Evaluation Method
 
-This evaluation uses **Cell-by-Cell matching** with IoU (Intersection over Union):
-- Each GT word is matched to the OCR result with highest bbox overlap
-- IoU threshold: 0.3
-- Only matched cells are compared for text accuracy
+This evaluation uses **Word-Level matching** with containment:
+- GT is word-level (individual words with small bboxes)
+- OCR output is line-level (text lines with larger bboxes)
+- Each GT word is matched to OCR line that best contains it (containment >= 50%)
+- For text matching, we check if GT word appears in the OCR line
 
 ---
 
@@ -384,7 +419,7 @@ This evaluation uses **Cell-by-Cell matching** with IoU (Intersection over Union
 |----------|-------|
 | Dataset | FinTabNet_c |
 | Total Images | {len(easyocr_results)} |
-| Total Cells | {easyocr_metrics['total_cells']:,} |
+| Total Cells (Words) | {easyocr_metrics['total_cells']:,} |
 | Domain | Financial Tables |
 
 ---
