@@ -1,0 +1,246 @@
+{
+  "image_name": "financial_statement_balance_sheet.png",
+  "document_type": "Balance Sheet",
+  "currency": "$'000",
+  
+  "table_structure": {
+    "num_rows": 26,
+    "num_cols": 6,
+    "headers": ["", "Note", "Group 2025", "Group 2024", "University Company 2025", "University Company 2024"],
+    "header_rows": 3
+  },
+  
+  "sections": [
+    {"name": "ASSETS", "type": "section_header", "row": 4},
+    {"name": "Non-current assets", "type": "subsection_header", "row": 5},
+    {"name": "Current assets", "type": "subsection_header", "row": 12},
+    {"name": "LIABILITIES", "type": "section_header", "row": 18},
+    {"name": "Non-current liabilities", "type": "subsection_header", "row": 19}
+  ],
+  
+  "cells": [
+    {"row": 6, "col": 0, "text": "Property, plant and equipment", "type": "row_header"},
+    {"row": 6, "col": 1, "text": "4", "type": "note_ref"},
+    {"row": 6, "col": 2, "text": "1,511,947", "type": "numeric", "value": 1511947},
+    {"row": 6, "col": 3, "text": "1,563,588", "type": "numeric", "value": 1563588},
+    {"row": 6, "col": 4, "text": "1,506,512", "type": "numeric", "value": 1506512},
+    {"row": 6, "col": 5, "text": "1,557,427", "type": "numeric", "value": 1557427},
+    
+    {"row": 7, "col": 0, "text": "Intangible assets", "type": "row_header"},
+    {"row": 7, "col": 1, "text": "5", "type": "note_ref"},
+    {"row": 7, "col": 2, "text": "877", "type": "numeric", "value": 877},
+    {"row": 7, "col": 3, "text": "1,889", "type": "numeric", "value": 1889},
+    {"row": 7, "col": 4, "text": "556", "type": "numeric", "value": 556},
+    {"row": 7, "col": 5, "text": "1,411", "type": "numeric", "value": 1411},
+    
+    {"row": 8, "col": 0, "text": "Subsidiaries", "type": "row_header"},
+    {"row": 8, "col": 1, "text": "6", "type": "note_ref"},
+    {"row": 8, "col": 2, "text": "-", "type": "empty", "value": null},
+    {"row": 8, "col": 3, "text": "-", "type": "empty", "value": null},
+    {"row": 8, "col": 4, "text": "500", "type": "numeric", "value": 500},
+    {"row": 8, "col": 5, "text": "500", "type": "numeric", "value": 500},
+    
+    {"row": 9, "col": 0, "text": "Equity-accounted investees", "type": "row_header"},
+    {"row": 9, "col": 1, "text": "7", "type": "note_ref"},
+    {"row": 9, "col": 2, "text": "18,947", "type": "numeric", "value": 18947},
+    {"row": 9, "col": 3, "text": "18,991", "type": "numeric", "value": 18991},
+    {"row": 9, "col": 4, "text": "18,947", "type": "numeric", "value": 18947},
+    {"row": 9, "col": 5, "text": "18,863", "type": "numeric", "value": 18863},
+    
+    {"row": 10, "col": 0, "text": "Student loans", "type": "row_header"},
+    {"row": 10, "col": 1, "text": "8", "type": "note_ref"},
+    {"row": 10, "col": 2, "text": "2,192", "type": "numeric", "value": 2192},
+    {"row": 10, "col": 3, "text": "1,780", "type": "numeric", "value": 1780},
+    {"row": 10, "col": 4, "text": "2,192", "type": "numeric", "value": 2192},
+    {"row": 10, "col": 5, "text": "1,780", "type": "numeric", "value": 1780},
+    
+    {"row": 11, "col": 0, "text": "Total non-current assets", "type": "subtotal", "style": "bold"},
+    {"row": 11, "col": 2, "text": "1,533,963", "type": "numeric", "value": 1533963},
+    {"row": 11, "col": 3, "text": "1,586,248", "type": "numeric", "value": 1586248},
+    {"row": 11, "col": 4, "text": "1,528,707", "type": "numeric", "value": 1528707},
+    {"row": 11, "col": 5, "text": "1,579,981", "type": "numeric", "value": 1579981},
+    
+    {"row": 13, "col": 0, "text": "Student loans", "type": "row_header"},
+    {"row": 13, "col": 1, "text": "8", "type": "note_ref"},
+    {"row": 13, "col": 2, "text": "762", "type": "numeric", "value": 762},
+    {"row": 13, "col": 3, "text": "684", "type": "numeric", "value": 684},
+    {"row": 13, "col": 4, "text": "762", "type": "numeric", "value": 762},
+    {"row": 13, "col": 5, "text": "684", "type": "numeric", "value": 684},
+    
+    {"row": 14, "col": 0, "text": "Trade and other receivables", "type": "row_header"},
+    {"row": 14, "col": 1, "text": "10", "type": "note_ref"},
+    {"row": 14, "col": 2, "text": "558,128", "type": "numeric", "value": 558128},
+    {"row": 14, "col": 3, "text": "495,351", "type": "numeric", "value": 495351},
+    {"row": 14, "col": 4, "text": "551,896", "type": "numeric", "value": 551896},
+    {"row": 14, "col": 5, "text": "483,483", "type": "numeric", "value": 483483},
+    
+    {"row": 15, "col": 0, "text": "Other investments", "type": "row_header"},
+    {"row": 15, "col": 1, "text": "11", "type": "note_ref"},
+    {"row": 15, "col": 2, "text": "5,481,384", "type": "numeric", "value": 5481384},
+    {"row": 15, "col": 3, "text": "4,874,843", "type": "numeric", "value": 4874843},
+    {"row": 15, "col": 4, "text": "5,467,851", "type": "numeric", "value": 5467851},
+    {"row": 15, "col": 5, "text": "4,854,420", "type": "numeric", "value": 4854420},
+    
+    {"row": 16, "col": 0, "text": "Cash and cash equivalents", "type": "row_header"},
+    {"row": 16, "col": 1, "text": "12", "type": "note_ref"},
+    {"row": 16, "col": 2, "text": "1,589,900", "type": "numeric", "value": 1589900},
+    {"row": 16, "col": 3, "text": "1,640,416", "type": "numeric", "value": 1640416},
+    {"row": 16, "col": 4, "text": "1,546,027", "type": "numeric", "value": 1546027},
+    {"row": 16, "col": 5, "text": "1,597,559", "type": "numeric", "value": 1597559},
+    
+    {"row": 17, "col": 0, "text": "Total current assets", "type": "subtotal", "style": "bold_red"},
+    {"row": 17, "col": 2, "text": "7,630,174", "type": "numeric", "value": 7630174},
+    {"row": 17, "col": 3, "text": "7,011,294", "type": "numeric", "value": 7011294},
+    {"row": 17, "col": 4, "text": "7,566,536", "type": "numeric", "value": 7566536},
+    {"row": 17, "col": 5, "text": "6,936,146", "type": "numeric", "value": 6936146},
+    
+    {"row": 18, "col": 0, "text": "Total assets", "type": "total", "style": "bold"},
+    {"row": 18, "col": 2, "text": "9,164,137", "type": "numeric", "value": 9164137},
+    {"row": 18, "col": 3, "text": "8,597,542", "type": "numeric", "value": 8597542},
+    {"row": 18, "col": 4, "text": "9,095,243", "type": "numeric", "value": 9095243},
+    {"row": 18, "col": 5, "text": "8,516,127", "type": "numeric", "value": 8516127},
+    
+    {"row": 21, "col": 0, "text": "Deferred capital grants", "type": "row_header"},
+    {"row": 21, "col": 1, "text": "13", "type": "note_ref"},
+    {"row": 21, "col": 2, "text": "936,264", "type": "numeric", "value": 936264},
+    {"row": 21, "col": 3, "text": "790,714", "type": "numeric", "value": 790714},
+    {"row": 21, "col": 4, "text": "935,676", "type": "numeric", "value": 935676},
+    {"row": 21, "col": 5, "text": "789,802", "type": "numeric", "value": 789802},
+    
+    {"row": 23, "col": 0, "text": "- Sinking fund", "type": "row_header"},
+    {"row": 23, "col": 1, "text": "14", "type": "note_ref"},
+    {"row": 23, "col": 2, "text": "302,307", "type": "numeric", "value": 302307},
+    {"row": 23, "col": 3, "text": "451,845", "type": "numeric", "value": 451845},
+    {"row": 23, "col": 4, "text": "302,307", "type": "numeric", "value": 302307},
+    {"row": 23, "col": 5, "text": "451,845", "type": "numeric", "value": 451845},
+    
+    {"row": 24, "col": 0, "text": "Loans and borrowings", "type": "row_header"},
+    {"row": 24, "col": 1, "text": "17", "type": "note_ref"},
+    {"row": 24, "col": 2, "text": "650,000", "type": "numeric", "value": 650000},
+    {"row": 24, "col": 3, "text": "650,000", "type": "numeric", "value": 650000},
+    {"row": 24, "col": 4, "text": "650,000", "type": "numeric", "value": 650000},
+    {"row": 24, "col": 5, "text": "650,000", "type": "numeric", "value": 650000},
+    
+    {"row": 25, "col": 0, "text": "Other non-current liabilities", "type": "row_header"},
+    {"row": 25, "col": 2, "text": "538", "type": "numeric", "value": 538},
+    {"row": 25, "col": 3, "text": "75", "type": "numeric", "value": 75},
+    {"row": 25, "col": 4, "text": "-", "type": "empty", "value": null},
+    {"row": 25, "col": 5, "text": "-", "type": "empty", "value": null},
+    
+    {"row": 26, "col": 0, "text": "Lease liabilities", "type": "row_header"},
+    {"row": 26, "col": 1, "text": "19", "type": "note_ref"},
+    {"row": 26, "col": 2, "text": "1,119", "type": "numeric", "value": 1119},
+    {"row": 26, "col": 3, "text": "2,372", "type": "numeric", "value": 2372},
+    {"row": 26, "col": 4, "text": "555", "type": "numeric", "value": 555},
+    {"row": 26, "col": 5, "text": "779", "type": "numeric", "value": 779},
+    
+    {"row": 27, "col": 0, "text": "Total non-current liabilities", "type": "subtotal", "style": "bold_red"},
+    {"row": 27, "col": 2, "text": "1,890,228", "type": "numeric", "value": 1890228},
+    {"row": 27, "col": 3, "text": "1,895,006", "type": "numeric", "value": 1895006},
+    {"row": 27, "col": 4, "text": "1,888,538", "type": "numeric", "value": 1888538},
+    {"row": 27, "col": 5, "text": "1,892,426", "type": "numeric", "value": 1892426}
+  ],
+  
+  "qa_pairs": [
+    {
+      "id": "q1",
+      "question": "What is the value of Property, plant and equipment for Group 2025?",
+      "answer": "1,511,947",
+      "answer_value": 1511947,
+      "row_key": "Property, plant and equipment",
+      "col_key": "Group 2025"
+    },
+    {
+      "id": "q2", 
+      "question": "What is Total assets for University Company 2024?",
+      "answer": "8,516,127",
+      "answer_value": 8516127,
+      "row_key": "Total assets",
+      "col_key": "University Company 2024"
+    },
+    {
+      "id": "q3",
+      "question": "What is the Cash and cash equivalents for Group 2024?",
+      "answer": "1,640,416",
+      "answer_value": 1640416,
+      "row_key": "Cash and cash equivalents",
+      "col_key": "Group 2024"
+    },
+    {
+      "id": "q4",
+      "question": "What is Other investments for University Company 2025?",
+      "answer": "5,467,851",
+      "answer_value": 5467851,
+      "row_key": "Other investments",
+      "col_key": "University Company 2025"
+    },
+    {
+      "id": "q5",
+      "question": "What is Total current assets for Group 2025?",
+      "answer": "7,630,174",
+      "answer_value": 7630174,
+      "row_key": "Total current assets",
+      "col_key": "Group 2025"
+    },
+    {
+      "id": "q6",
+      "question": "What is Loans and borrowings for Group 2025?",
+      "answer": "650,000",
+      "answer_value": 650000,
+      "row_key": "Loans and borrowings",
+      "col_key": "Group 2025"
+    },
+    {
+      "id": "q7",
+      "question": "What is the value of Intangible assets for University Company 2024?",
+      "answer": "1,411",
+      "answer_value": 1411,
+      "row_key": "Intangible assets",
+      "col_key": "University Company 2024"
+    },
+    {
+      "id": "q8",
+      "question": "What is Total non-current liabilities for Group 2024?",
+      "answer": "1,895,006",
+      "answer_value": 1895006,
+      "row_key": "Total non-current liabilities",
+      "col_key": "Group 2024"
+    },
+    {
+      "id": "q9",
+      "question": "What is the Sinking fund for University Company 2025?",
+      "answer": "302,307",
+      "answer_value": 302307,
+      "row_key": "- Sinking fund",
+      "col_key": "University Company 2025"
+    },
+    {
+      "id": "q10",
+      "question": "What is Trade and other receivables for Group 2025?",
+      "answer": "558,128",
+      "answer_value": 558128,
+      "row_key": "Trade and other receivables",
+      "col_key": "Group 2025"
+    }
+  ],
+  
+  "validation_rules": [
+    {
+      "id": "v1",
+      "rule": "Total non-current assets = sum of non-current asset items",
+      "formula": "Property, plant and equipment + Intangible assets + Subsidiaries + Equity-accounted investees + Student loans = Total non-current assets",
+      "expected": true
+    },
+    {
+      "id": "v2",
+      "rule": "Total current assets = sum of current asset items", 
+      "formula": "Student loans + Trade and other receivables + Other investments + Cash and cash equivalents = Total current assets",
+      "expected": true
+    },
+    {
+      "id": "v3",
+      "rule": "Total assets = Total non-current assets + Total current assets",
+      "expected": true
+    }
+  ]
+}
