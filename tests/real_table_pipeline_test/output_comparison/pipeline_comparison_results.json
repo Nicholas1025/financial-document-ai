@@ -1,0 +1,145 @@
+{
+  "timestamp": "2026-01-04 01:27:33",
+  "image": "tests\\real_table_pipeline_test\\nanyang_sample1.png",
+  "num_questions": 10,
+  "systems": {
+    "table_transformer": {
+      "name": "Table Transformer + EasyOCR",
+      "time_ms": 23377.56872177124,
+      "correct": 3,
+      "total": 10,
+      "accuracy": 30.0,
+      "details": [
+        {
+          "question": "What is the value of Property, plant and equipment for Group 2025?",
+          "expected": "1,511,947",
+          "predicted": "1,511,947",
+          "correct": true
+        },
+        {
+          "question": "What is Total assets for University Company 2024?",
+          "expected": "8,516,127",
+          "predicted": null,
+          "correct": false
+        },
+        {
+          "question": "What is the Cash and cash equivalents for Group 2024?",
+          "expected": "1,640,416",
+          "predicted": "1,589,900",
+          "correct": false
+        },
+        {
+          "question": "What is Other investments for University Company 2025?",
+          "expected": "5,467,851",
+          "predicted": "5,467,851",
+          "correct": true
+        },
+        {
+          "question": "What is Total current assets for Group 2025?",
+          "expected": "7,630,174",
+          "predicted": null,
+          "correct": false
+        },
+        {
+          "question": "What is Loans and borrowings for Group 2025?",
+          "expected": "650,000",
+          "predicted": "650,000",
+          "correct": true
+        },
+        {
+          "question": "What is the value of Intangible assets for University Company 2024?",
+          "expected": "1,411",
+          "predicted": null,
+          "correct": false
+        },
+        {
+          "question": "What is Total non-current liabilities for Group 2024?",
+          "expected": "1,895,006",
+          "predicted": null,
+          "correct": false
+        },
+        {
+          "question": "What is the Sinking fund for University Company 2025?",
+          "expected": "302,307",
+          "predicted": null,
+          "correct": false
+        },
+        {
+          "question": "What is Trade and other receivables for Group 2025?",
+          "expected": "558,128",
+          "predicted": "10",
+          "correct": false
+        }
+      ]
+    },
+    "docling_e2e": {
+      "name": "Docling End-to-End",
+      "time_ms": 109276.33213996887,
+      "correct": 2,
+      "total": 10,
+      "accuracy": 20.0,
+      "details": [
+        {
+          "question": "What is the value of Property, plant and equipment for Group 2025?",
+          "expected": "1,511,947",
+          "predicted": "",
+          "correct": false
+        },
+        {
+          "question": "What is Total assets for University Company 2024?",
+          "expected": "8,516,127",
+          "predicted": "",
+          "correct": false
+        },
+        {
+          "question": "What is the Cash and cash equivalents for Group 2024?",
+          "expected": "1,640,416",
+          "predicted": "1,589,900",
+          "correct": false
+        },
+        {
+          "question": "What is Other investments for University Company 2025?",
+          "expected": "5,467,851",
+          "predicted": "5,467,851",
+          "correct": true
+        },
+        {
+          "question": "What is Total current assets for Group 2025?",
+          "expected": "7,630,174",
+          "predicted": "",
+          "correct": false
+        },
+        {
+          "question": "What is Loans and borrowings for Group 2025?",
+          "expected": "650,000",
+          "predicted": "17",
+          "correct": false
+        },
+        {
+          "question": "What is the value of Intangible assets for University Company 2024?",
+          "expected": "1,411",
+          "predicted": "1,411",
+          "correct": true
+        },
+        {
+          "question": "What is Total non-current liabilities for Group 2024?",
+          "expected": "1,895,006",
+          "predicted": "",
+          "correct": false
+        },
+        {
+          "question": "What is the Sinking fund for University Company 2025?",
+          "expected": "302,307",
+          "predicted": null,
+          "correct": false
+        },
+        {
+          "question": "What is Trade and other receivables for Group 2025?",
+          "expected": "558,128",
+          "predicted": "10",
+          "correct": false
+        }
+      ]
+    }
+  }
+}

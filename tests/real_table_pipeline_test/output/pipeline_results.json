@@ -1,0 +1,1189 @@
+{
+  "step1_detection": {
+    "num_tables_detected": 1,
+    "tables": [
+      {
+        "bbox": [
+          18.699392318725586,
+          24.403648376464844,
+          1203.806884765625,
+          881.9566040039062
+        ],
+        "confidence": 0.9999417066574097,
+        "label": "table"
+      }
+    ],
+    "gt_expected": 1,
+    "detection_success": true,
+    "confidence": 0.9999417066574097
+  },
+  "step2_tsr": {
+    "detected_rows": 36,
+    "detected_cols": 7,
+    "detected_cells": 1,
+    "detected_headers": 0,
+    "gt_rows": 26,
+    "gt_cols": 6,
+    "row_accuracy": 72.22222222222221,
+    "col_accuracy": 85.71428571428571,
+    "all_detections": [
+      {
+        "bbox": [
+          16.699949264526367,
+          668.3016357421875,
+          1201.5394287109375,
+          696.5036010742188
+        ],
+        "confidence": 0.9674926400184631,
+        "label": "table row"
+      },
+      {
+        "bbox": [
+          16.860145568847656,
+          804.86767578125,
+          1202.8701171875,
+          832.3238525390625
+        ],
+        "confidence": 0.9968709349632263,
+        "label": "table row"
+      },
+      {
+        "bbox": [
+          16.26076889038086,
+          154.13706970214844,
+          1201.4639892578125,
+          188.97898864746094
+        ],
+        "confidence": 0.9283542633056641,
+        "label": "table row"
+      },
+      {
+        "bbox": [
+          16.143651962280273,
+          570.402587890625,
+          1201.6348876953125,
+          621.62646484375
+        ],
+        "confidence": 0.9031859040260315,
+        "label": "table row"
+      },
+      {
+        "bbox": [
+          16.1879940032959,
+          365.42156982421875,
+          1201.52099609375,
+          407.2623291015625
+        ],
+        "confidence": 0.8145240545272827,
+        "label": "table row"
+      },
+      {
+        "bbox": [
+          16.198781967163086,
+          624.529052734375,
+          1201.6715087890625,
+          668.188232421875
+        ],
+        "confidence": 0.9669003486633301,
+        "label": "table row"
+      },
+      {
+        "bbox": [
+          15.954500198364258,
+          112.20075225830078,
+          1201.9671630859375,
+          156.7465057373047
+        ],
+        "confidence": 0.9362310767173767,
+        "label": "table projected row header"
+      },
+      {
+        "bbox": [
+          15.535675048828125,
+          503.4981384277344,
+          1201.8802490234375,
+          532.4623413085938
+        ],
+        "confidence": 0.5935860276222229,
+        "label": "table row"
+      },
+      {
+        "bbox": [
+          15.818809509277344,
+          111.94126892089844,
+          1201.7152099609375,
+          154.86802673339844
+        ],
+        "confidence": 0.8885721564292908,
+        "label": "table row"
+      },
+      {
+        "bbox": [
+          16.027795791625977,
+          74.42178344726562,
+          1203.0032958984375,
+          112.76276397705078
+        ],
+        "confidence": 0.969215989112854,
+        "label": "table row"
+      },
+      {
+        "bbox": [
+          16.850914001464844,
+          242.91390991210938,
+          1202.1141357421875,
+          270.88446044921875
+        ],
+        "confidence": 0.9854808449745178,
+        "label": "table row"
+      },
+      {
+        "bbox": [
+          16.78662872314453,
+          400.21905517578125,
+          1201.2078857421875,
+          428.3893127441406
+        ],
+        "confidence": 0.8768183588981628,
+        "label": "table row"
+      },
+      {
+        "bbox": [
+          16.650604248046875,
+          696.4336547851562,
+          1201.5777587890625,
+          723.8868408203125
+        ],
+        "confidence": 0.9766314625740051,
+        "label": "table row"
+      },
+      {
+        "bbox": [
+          16.092044830322266,
+          269.5433349609375,
+          1202.2379150390625,
+          297.45452880859375
+        ],
+        "confidence": 0.9873585104942322,
+        "label": "table row"
+      },
+      {
+        "bbox": [
+          16.681596755981445,
+          186.29026794433594,
+          1201.6590576171875,
+          214.2838134765625
+        ],
+        "confidence": 0.9630236029624939,
+        "label": "table row"
+      },
+      {
+        "bbox": [
+          15.060977935791016,
+          514.22705078125,
+          1202.2293701171875,
+          543.2695922851562
+        ],
+        "confidence": 0.8214964866638184,
+        "label": "table row"
+      },
+      {
+        "bbox": [
+          16.500713348388672,
+          777.3583374023438,
+          1202.5526123046875,
+          804.8580932617188
+        ],
+        "confidence": 0.9970369338989258,
+        "label": "table row"
+      },
+      {
+        "bbox": [
+          14.892662048339844,
+          487.710205078125,
+          1202.5482177734375,
+          516.742431640625
+        ],
+        "confidence": 0.8990961909294128,
+        "label": "table row"
+      },
+      {
+        "bbox": [
+          16.280269622802734,
+          296.71746826171875,
+          1202.675537109375,
+          324.46173095703125
+        ],
+        "confidence": 0.9769365191459656,
+        "label": "table row"
+      },
+      {
+        "bbox": [
+          16.99168586730957,
+          213.8215789794922,
+          1201.7076416015625,
+          241.83950805664062
+        ],
+        "confidence": 0.9827967882156372,
+        "label": "table row"
+      },
+      {
+        "bbox": [
+          15.787036895751953,
+          428.99005126953125,
+          1202.4327392578125,
+          456.8731689453125
+        ],
+        "confidence": 0.9677637219429016,
+        "label": "table row"
+      },
+      {
+        "bbox": [
+          16.576122283935547,
+          47.2462158203125,
+          1202.778564453125,
+          74.52272033691406
+        ],
+        "confidence": 0.9989720582962036,
+        "label": "table row"
+      },
+      {
+        "bbox": [
+          17.204675674438477,
+          610.4142456054688,
+          1200.06494140625,
+          653.2680053710938
+        ],
+        "confidence": 0.528215765953064,
+        "label": "table projected row header"
+      },
+      {
+        "bbox": [
+          15.591804504394531,
+          667.2091064453125,
+          1201.974609375,
+          696.6563110351562
+        ],
+        "confidence": 0.9700892567634583,
+        "label": "table projected row header"
+      },
+      {
+        "bbox": [
+          15.657722473144531,
+          360.10400390625,
+          1202.592041015625,
+          405.5449523925781
+        ],
+        "confidence": 0.8876115083694458,
+        "label": "table projected row header"
+      },
+      {
+        "bbox": [
+          14.441803932189941,
+          535.9238891601562,
+          1201.898193359375,
+          568.7600708007812
+        ],
+        "confidence": 0.7980558276176453,
+        "label": "table row"
+      },
+      {
+        "bbox": [
+          17.06564712524414,
+          831.9888305664062,
+          1202.8875732421875,
+          855.2760620117188
+        ],
+        "confidence": 0.9835251569747925,
+        "label": "table row"
+      },
+      {
+        "bbox": [
+          16.207901000976562,
+          723.1592407226562,
+          1202.0618896484375,
+          750.9474487304688
+        ],
+        "confidence": 0.9806714653968811,
+        "label": "table projected row header"
+      },
+      {
+        "bbox": [
+          15.9270658493042,
+          151.53660583496094,
+          1201.3739013671875,
+          185.9795379638672
+        ],
+        "confidence": 0.9450827240943909,
+        "label": "table projected row header"
+      },
+      {
+        "bbox": [
+          16.599924087524414,
+          548.4951171875,
+          1202.3187255859375,
+          579.2022705078125
+        ],
+        "confidence": 0.8133298754692078,
+        "label": "table row"
+      },
+      {
+        "bbox": [
+          16.626134872436523,
+          750.5711059570312,
+          1202.2454833984375,
+          777.8287353515625
+        ],
+        "confidence": 0.9893543720245361,
+        "label": "table row"
+      },
+      {
+        "bbox": [
+          14.513504981994629,
+          346.2406005859375,
+          1202.5133056640625,
+          387.34515380859375
+        ],
+        "confidence": 0.7959737181663513,
+        "label": "table projected row header"
+      },
+      {
+        "bbox": [
+          15.754819869995117,
+          470.18011474609375,
+          1202.3380126953125,
+          498.22808837890625
+        ],
+        "confidence": 0.6542710661888123,
+        "label": "table row"
+      },
+      {
+        "bbox": [
+          16.348783493041992,
+          321.431884765625,
+          1201.2733154296875,
+          364.3538513183594
+        ],
+        "confidence": 0.9911076426506042,
+        "label": "table row"
+      },
+      {
+        "bbox": [
+          16.671735763549805,
+          723.3815307617188,
+          1201.9263916015625,
+          750.759521484375
+        ],
+        "confidence": 0.9740126729011536,
+        "label": "table row"
+      },
+      {
+        "bbox": [
+          15.841943740844727,
+          455.1318054199219,
+          1203.1593017578125,
+          483.0542907714844
+        ],
+        "confidence": 0.6442726850509644,
+        "label": "table row"
+      },
+      {
+        "bbox": [
+          801.59716796875,
+          47.03557586669922,
+          945.9390869140625,
+          855.154541015625
+        ],
+        "confidence": 0.999822199344635,
+        "label": "table column"
+      },
+      {
+        "bbox": [
+          643.0562133789062,
+          47.48048782348633,
+          800.8599853515625,
+          855.52001953125
+        ],
+        "confidence": 0.999788224697113,
+        "label": "table column"
+      },
+      {
+        "bbox": [
+          14.230573654174805,
+          47.93670654296875,
+          403.9595031738281,
+          855.3209228515625
+        ],
+        "confidence": 0.9999425411224365,
+        "label": "table column"
+      },
+      {
+        "bbox": [
+          945.9698486328125,
+          46.666751861572266,
+          1091.53515625,
+          855.8561401367188
+        ],
+        "confidence": 0.9998698234558105,
+        "label": "table column"
+      },
+      {
+        "bbox": [
+          1093.0374755859375,
+          46.91334915161133,
+          1202.43701171875,
+          855.5391235351562
+        ],
+        "confidence": 0.9999066591262817,
+        "label": "table column"
+      },
+      {
+        "bbox": [
+          16.66272735595703,
+          47.20378494262695,
+          1202.5216064453125,
+          74.46955871582031
+        ],
+        "confidence": 0.9961344003677368,
+        "label": "table column header"
+      },
+      {
+        "bbox": [
+          405.3133544921875,
+          47.47218322753906,
+          645.3263549804688,
+          855.23583984375
+        ],
+        "confidence": 0.999691367149353,
+        "label": "table column"
+      },
+      {
+        "bbox": [
+          16.65460777282715,
+          47.02006149291992,
+          1202.6490478515625,
+          854.8775024414062
+        ],
+        "confidence": 0.999996542930603,
+        "label": "table"
+      }
+    ]
+  },
+  "step3_ocr": {
+    "num_text_regions": 108,
+    "gt_cell_count": 103,
+    "matched_cells": 96,
+    "cell_match_rate": 93.20388349514563,
+    "extracted_texts": [
+      {
+        "text": "Group",
+        "confidence": 0.9997876555830156,
+        "bbox": [
+          [
+            "803",
+            "15"
+          ],
+          [
+            "860",
+            "15"
+          ],
+          [
+            "860",
+            "40"
+          ],
+          [
+            "803",
+            "40"
+          ]
+        ]
+      },
+      {
+        "text": "University Company",
+        "confidence": 0.99724917589046,
+        "bbox": [
+          [
+            "1031",
+            "13"
+          ],
+          [
+            "1208",
+            "13"
+          ],
+          [
+            "1208",
+            "41"
+          ],
+          [
+            "1031",
+            "41"
+          ]
+        ]
+      },
+      {
+        "text": "Note",
+        "confidence": 0.6908208537840766,
+        "bbox": [
+          [
+            "557",
+            "49"
+          ],
+          [
+            "599",
+            "49"
+          ],
+          [
+            "599",
+            "69"
+          ],
+          [
+            "557",
+            "69"
+          ]
+        ]
+      },
+      {
+        "text": "2025",
+        "confidence": 0.9999979734420776,
+        "bbox": [
+          [
+            "721",
+            "49"
+          ],
+          [
+            "765",
+            "49"
+          ],
+          [
+            "765",
+            "69"
+          ],
+          [
+            "721",
+            "69"
+          ]
+        ]
+      },
+      {
+        "text": "2024",
+        "confidence": 0.9975804090499878,
+        "bbox": [
+          [
+            "867",
+            "49"
+          ],
+          [
+            "911",
+            "49"
+          ],
+          [
+            "911",
+            "69"
+          ],
+          [
+            "867",
+            "69"
+          ]
+        ]
+      },
+      {
+        "text": "2025",
+        "confidence": 0.9999907612800598,
+        "bbox": [
+          [
+            "1011",
+            "49"
+          ],
+          [
+            "1057",
+            "49"
+          ],
+          [
+            "1057",
+            "69"
+          ],
+          [
+            "1011",
+            "69"
+          ]
+        ]
+      },
+      {
+        "text": "2024",
+        "confidence": 0.9918409585952759,
+        "bbox": [
+          [
+            "1157",
+            "49"
+          ],
+          [
+            "1205",
+            "49"
+          ],
+          [
+            "1205",
+            "69"
+          ],
+          [
+            "1157",
+            "69"
+          ]
+        ]
+      },
+      {
+        "text": "5'000",
+        "confidence": 0.501785775446047,
+        "bbox": [
+          [
+            "712",
+            "80"
+          ],
+          [
+            "766",
+            "80"
+          ],
+          [
+            "766",
+            "104"
+          ],
+          [
+            "712",
+            "104"
+          ]
+        ]
+      },
+      {
+        "text": "S'000",
+        "confidence": 0.6835290672031539,
+        "bbox": [
+          [
+            "860",
+            "80"
+          ],
+          [
+            "914",
+            "80"
+          ],
+          [
+            "914",
+            "104"
+          ],
+          [
+            "860",
+            "104"
+          ]
+        ]
+      },
+      {
+        "text": "S'000",
+        "confidence": 0.5916920782562214,
+        "bbox": [
+          [
+            "1006",
+            "80"
+          ],
+          [
+            "1058",
+            "80"
+          ],
+          [
+            "1058",
+            "104"
+          ],
+          [
+            "1006",
+            "104"
+          ]
+        ]
+      },
+      {
+        "text": "S'000",
+        "confidence": 0.34017781775347194,
+        "bbox": [
+          [
+            "1152",
+            "80"
+          ],
+          [
+            "1204",
+            "80"
+          ],
+          [
+            "1204",
+            "104"
+          ],
+          [
+            "1152",
+            "104"
+          ]
+        ]
+      },
+      {
+        "text": "ASSETS",
+        "confidence": 0.9881569929222137,
+        "bbox": [
+          [
+            "19",
+            "125"
+          ],
+          [
+            "89",
+            "125"
+          ],
+          [
+            "89",
+            "145"
+          ],
+          [
+            "19",
+            "145"
+          ]
+        ]
+      },
+      {
+        "text": "Non-curent assets",
+        "confidence": 0.9505560558634487,
+        "bbox": [
+          [
+            "19",
+            "165"
+          ],
+          [
+            "184",
+            "165"
+          ],
+          [
+            "184",
+            "189"
+          ],
+          [
+            "19",
+            "189"
+          ]
+        ]
+      },
+      {
+        "text": "Property, plant and equipment",
+        "confidence": 0.9637361994712561,
+        "bbox": [
+          [
+            "17",
+            "191"
+          ],
+          [
+            "258",
+            "191"
+          ],
+          [
+            "258",
+            "217"
+          ],
+          [
+            "17",
+            "217"
+          ]
+        ]
+      },
+      {
+        "text": "1,511,947",
+        "confidence": 0.6548835034511669,
+        "bbox": [
+          [
+            "690",
+            "192"
+          ],
+          [
+            "766",
+            "192"
+          ],
+          [
+            "766",
+            "216"
+          ],
+          [
+            "690",
+            "216"
+          ]
+        ]
+      },
+      {
+        "text": "1,563,588",
+        "confidence": 0.9118136937238007,
+        "bbox": [
+          [
+            "836",
+            "192"
+          ],
+          [
+            "912",
+            "192"
+          ],
+          [
+            "912",
+            "216"
+          ],
+          [
+            "836",
+            "216"
+          ]
+        ]
+      },
+      {
+        "text": "1,506,512",
+        "confidence": 0.9764735205081351,
+        "bbox": [
+          [
+            "982",
+            "192"
+          ],
+          [
+            "1058",
+            "192"
+          ],
+          [
+            "1058",
+            "216"
+          ],
+          [
+            "982",
+            "216"
+          ]
+        ]
+      },
+      {
+        "text": "557,427",
+        "confidence": 0.9933717688659629,
+        "bbox": [
+          [
+            "1141",
+            "193"
+          ],
+          [
+            "1203",
+            "193"
+          ],
+          [
+            "1203",
+            "213"
+          ],
+          [
+            "1141",
+            "213"
+          ]
+        ]
+      },
+      {
+        "text": "Intangible assets",
+        "confidence": 0.9185271906204164,
+        "bbox": [
+          [
+            "16",
+            "220"
+          ],
+          [
+            "152",
+            "220"
+          ],
+          [
+            "152",
+            "246"
+          ],
+          [
+            "16",
+            "246"
+          ]
+        ]
+      },
+      {
+        "text": "877",
+        "confidence": 0.9999997246979434,
+        "bbox": [
+          [
+            "733",
+            "221"
+          ],
+          [
+            "765",
+            "221"
+          ],
+          [
+            "765",
+            "241"
+          ],
+          [
+            "733",
+            "241"
+          ]
+        ]
+      }
+    ],
+    "sample_gt_texts": [
+      "Property, plant and equipment",
+      "4",
+      "1,511,947",
+      "1,563,588",
+      "1,506,512",
+      "1,557,427",
+      "Intangible assets",
+      "5",
+      "877",
+      "1,889"
+    ]
+  },
+  "step4_numeric": {
+    "total_numeric_cells": 68,
+    "correct_parses": 68,
+    "parse_accuracy": 100.0,
+    "sample_results": [
+      {
+        "text": "1,511,947",
+        "gt_value": 1511947,
+        "parsed_value": 1511947.0,
+        "success": true,
+        "correct": true
+      },
+      {
+        "text": "1,563,588",
+        "gt_value": 1563588,
+        "parsed_value": 1563588.0,
+        "success": true,
+        "correct": true
+      },
+      {
+        "text": "1,506,512",
+        "gt_value": 1506512,
+        "parsed_value": 1506512.0,
+        "success": true,
+        "correct": true
+      },
+      {
+        "text": "1,557,427",
+        "gt_value": 1557427,
+        "parsed_value": 1557427.0,
+        "success": true,
+        "correct": true
+      },
+      {
+        "text": "877",
+        "gt_value": 877,
+        "parsed_value": 877.0,
+        "success": true,
+        "correct": true
+      },
+      {
+        "text": "1,889",
+        "gt_value": 1889,
+        "parsed_value": 1889.0,
+        "success": true,
+        "correct": true
+      },
+      {
+        "text": "556",
+        "gt_value": 556,
+        "parsed_value": 556.0,
+        "success": true,
+        "correct": true
+      },
+      {
+        "text": "1,411",
+        "gt_value": 1411,
+        "parsed_value": 1411.0,
+        "success": true,
+        "correct": true
+      },
+      {
+        "text": "500",
+        "gt_value": 500,
+        "parsed_value": 500.0,
+        "success": true,
+        "correct": true
+      },
+      {
+        "text": "500",
+        "gt_value": 500,
+        "parsed_value": 500.0,
+        "success": true,
+        "correct": true
+      }
+    ]
+  },
+  "step5_semantic": {
+    "total_cells": 103,
+    "correct_classifications": 99,
+    "accuracy": 96.11650485436894,
+    "type_breakdown": {
+      "row_header": {
+        "correct": 14,
+        "total": 14
+      },
+      "note_ref": {
+        "correct": 13,
+        "total": 13
+      },
+      "numeric": {
+        "correct": 67,
+        "total": 68
+      },
+      "empty": {
+        "correct": 4,
+        "total": 4
+      },
+      "subtotal": {
+        "correct": 0,
+        "total": 3
+      },
+      "total": {
+        "correct": 1,
+        "total": 1
+      }
+    },
+    "sample_results": [
+      {
+        "text": "Property, plant and equipment",
+        "gt_type": "row_header",
+        "pred_type": "row_header",
+        "correct": true
+      },
+      {
+        "text": "4",
+        "gt_type": "note_ref",
+        "pred_type": "note_ref",
+        "correct": true
+      },
+      {
+        "text": "1,511,947",
+        "gt_type": "numeric",
+        "pred_type": "numeric",
+        "correct": true
+      },
+      {
+        "text": "1,563,588",
+        "gt_type": "numeric",
+        "pred_type": "numeric",
+        "correct": true
+      },
+      {
+        "text": "1,506,512",
+        "gt_type": "numeric",
+        "pred_type": "numeric",
+        "correct": true
+      },
+      {
+        "text": "1,557,427",
+        "gt_type": "numeric",
+        "pred_type": "numeric",
+        "correct": true
+      },
+      {
+        "text": "Intangible assets",
+        "gt_type": "row_header",
+        "pred_type": "row_header",
+        "correct": true
+      },
+      {
+        "text": "5",
+        "gt_type": "note_ref",
+        "pred_type": "note_ref",
+        "correct": true
+      },
+      {
+        "text": "877",
+        "gt_type": "numeric",
+        "pred_type": "numeric",
+        "correct": true
+      },
+      {
+        "text": "1,889",
+        "gt_type": "numeric",
+        "pred_type": "numeric",
+        "correct": true
+      }
+    ]
+  },
+  "step6_qa": {
+    "total_questions": 10,
+    "correct": 10,
+    "accuracy": 100.0,
+    "qa_results": [
+      {
+        "question": "What is the value of Property, plant and equipment for Group 2025?",
+        "row_key": "Property, plant and equipment",
+        "col_key": "Group 2025",
+        "gt_answer": "1,511,947",
+        "pred_answer": "1,511,947",
+        "correct": true
+      },
+      {
+        "question": "What is Total assets for University Company 2024?",
+        "row_key": "Total assets",
+        "col_key": "University Company 2024",
+        "gt_answer": "8,516,127",
+        "pred_answer": "8,516,127",
+        "correct": true
+      },
+      {
+        "question": "What is the Cash and cash equivalents for Group 2024?",
+        "row_key": "Cash and cash equivalents",
+        "col_key": "Group 2024",
+        "gt_answer": "1,640,416",
+        "pred_answer": "1,640,416",
+        "correct": true
+      },
+      {
+        "question": "What is Other investments for University Company 2025?",
+        "row_key": "Other investments",
+        "col_key": "University Company 2025",
+        "gt_answer": "5,467,851",
+        "pred_answer": "5,467,851",
+        "correct": true
+      },
+      {
+        "question": "What is Total current assets for Group 2025?",
+        "row_key": "Total current assets",
+        "col_key": "Group 2025",
+        "gt_answer": "7,630,174",
+        "pred_answer": "7,630,174",
+        "correct": true
+      },
+      {
+        "question": "What is Loans and borrowings for Group 2025?",
+        "row_key": "Loans and borrowings",
+        "col_key": "Group 2025",
+        "gt_answer": "650,000",
+        "pred_answer": "650,000",
+        "correct": true
+      },
+      {
+        "question": "What is the value of Intangible assets for University Company 2024?",
+        "row_key": "Intangible assets",
+        "col_key": "University Company 2024",
+        "gt_answer": "1,411",
+        "pred_answer": "1,411",
+        "correct": true
+      },
+      {
+        "question": "What is Total non-current liabilities for Group 2024?",
+        "row_key": "Total non-current liabilities",
+        "col_key": "Group 2024",
+        "gt_answer": "1,895,006",
+        "pred_answer": "1,895,006",
+        "correct": true
+      },
+      {
+        "question": "What is the Sinking fund for University Company 2025?",
+        "row_key": "- Sinking fund",
+        "col_key": "University Company 2025",
+        "gt_answer": "302,307",
+        "pred_answer": "302,307",
+        "correct": true
+      },
+      {
+        "question": "What is Trade and other receivables for Group 2025?",
+        "row_key": "Trade and other receivables",
+        "col_key": "Group 2025",
+        "gt_answer": "558,128",
+        "pred_answer": "558,128",
+        "correct": true
+      }
+    ]
+  }
+}

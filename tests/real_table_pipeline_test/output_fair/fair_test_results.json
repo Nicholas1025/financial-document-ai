@@ -1,0 +1,905 @@
+{
+  "timings": {
+    "step1": 15382.309675216675,
+    "step2": 1932.1162700653076,
+    "step3": 7218.686819076538,
+    "step4": 0.0,
+    "step5": 1.483917236328125,
+    "step6": 14.384984970092773
+  },
+  "results": {
+    "step1": {
+      "num_tables": 1,
+      "confidence": 0.9999417066574097,
+      "bbox": [
+        18.699392318725586,
+        24.403648376464844,
+        1203.806884765625,
+        881.9566040039062
+      ],
+      "success": true
+    },
+    "step2": {
+      "rows": 36,
+      "cols": 7,
+      "cells": 1,
+      "headers": 0,
+      "row_bboxes": [
+        [
+          38.307315826416016,
+          23.838520050048828,
+          1154.5599365234375,
+          50.12368392944336
+        ],
+        [
+          38.35223388671875,
+          49.20746612548828,
+          1154.6270751953125,
+          83.13006591796875
+        ],
+        [
+          38.1501579284668,
+          80.55252075195312,
+          1153.862060546875,
+          120.55260467529297
+        ],
+        [
+          38.422054290771484,
+          82.22705078125,
+          1154.062744140625,
+          126.02017211914062
+        ],
+        [
+          38.657188415527344,
+          118.88304138183594,
+          1154.085693359375,
+          152.21905517578125
+        ],
+        [
+          38.520057678222656,
+          120.76809692382812,
+          1154.2486572265625,
+          153.68785095214844
+        ],
+        [
+          38.86056900024414,
+          152.2111358642578,
+          1154.2467041015625,
+          182.52728271484375
+        ],
+        [
+          38.67654037475586,
+          181.99996948242188,
+          1154.237060546875,
+          210.63075256347656
+        ],
+        [
+          38.60047149658203,
+          212.43626403808594,
+          1154.529541015625,
+          240.7432098388672
+        ],
+        [
+          38.12042236328125,
+          238.33087158203125,
+          1154.53125,
+          266.58355712890625
+        ],
+        [
+          37.97248458862305,
+          242.93971252441406,
+          1154.837890625,
+          270.90155029296875
+        ],
+        [
+          38.01002502441406,
+          265.0446472167969,
+          1154.5889892578125,
+          293.4958801269531
+        ],
+        [
+          38.04099655151367,
+          269.41766357421875,
+          1154.85302734375,
+          297.5372009277344
+        ],
+        [
+          38.36343002319336,
+          287.75640869140625,
+          1154.4151611328125,
+          315.95245361328125
+        ],
+        [
+          38.48262023925781,
+          310.86798095703125,
+          1154.1173095703125,
+          353.6143493652344
+        ],
+        [
+          37.55794906616211,
+          334.8476867675781,
+          1153.8468017578125,
+          376.6737365722656
+        ],
+        [
+          38.06459045410156,
+          354.19384765625,
+          1153.7701416015625,
+          383.6083679199219
+        ],
+        [
+          38.29573059082031,
+          373.5354309082031,
+          1154.0618896484375,
+          402.06195068359375
+        ],
+        [
+          38.07543182373047,
+          399.3951110839844,
+          1154.56787109375,
+          427.53216552734375
+        ],
+        [
+          38.41516876220703,
+          426.0106201171875,
+          1154.152587890625,
+          454.2061462402344
+        ],
+        [
+          38.197872161865234,
+          451.7612609863281,
+          1154.34619140625,
+          479.9143371582031
+        ],
+        [
+          38.1607551574707,
+          476.70526123046875,
+          1154.0579833984375,
+          505.7223205566406
+        ],
+        [
+          38.09358215332031,
+          499.23492431640625,
+          1154.38818359375,
+          528.78662109375
+        ],
+        [
+          38.58087158203125,
+          551.8237915039062,
+          1154.43408203125,
+          584.8837280273438
+        ],
+        [
+          38.60566329956055,
+          576.4437866210938,
+          1153.9029541015625,
+          615.9319458007812
+        ],
+        [
+          38.775142669677734,
+          582.0380249023438,
+          1153.5352783203125,
+          615.7571411132812
+        ],
+        [
+          38.605308532714844,
+          611.80126953125,
+          1153.8465576171875,
+          645.4653930664062
+        ],
+        [
+          38.68900680541992,
+          644.7813720703125,
+          1153.5504150390625,
+          672.272705078125
+        ],
+        [
+          38.28043746948242,
+          645.7361450195312,
+          1154.4422607421875,
+          673.5821533203125
+        ],
+        [
+          38.50285720825195,
+          671.857666015625,
+          1153.5721435546875,
+          699.1187744140625
+        ],
+        [
+          38.37451934814453,
+          697.4802856445312,
+          1153.916259765625,
+          724.838623046875
+        ],
+        [
+          38.56684875488281,
+          698.4661254882812,
+          1153.67529296875,
+          725.4744873046875
+        ],
+        [
+          38.370704650878906,
+          724.8270263671875,
+          1153.7264404296875,
+          751.5555419921875
+        ],
+        [
+          38.13846969604492,
+          751.5577392578125,
+          1154.1319580078125,
+          778.7596435546875
+        ],
+        [
+          38.07380676269531,
+          778.6608276367188,
+          1154.212158203125,
+          806.0298461914062
+        ],
+        [
+          38.270198822021484,
+          806.8551635742188,
+          1154.5152587890625,
+          829.0482788085938
+        ]
+      ],
+      "col_bboxes": [
+        [
+          38.29099655151367,
+          23.75361442565918,
+          1154.8828125,
+          50.348323822021484
+        ],
+        [
+          38.53976058959961,
+          25.1290283203125,
+          387.2966003417969,
+          829.50732421875
+        ],
+        [
+          389.1296081542969,
+          24.62802505493164,
+          626.616455078125,
+          829.235107421875
+        ],
+        [
+          627.7398071289062,
+          24.60892105102539,
+          783.6053466796875,
+          829.4644165039062
+        ],
+        [
+          785.6005249023438,
+          24.41049575805664,
+          927.3887329101562,
+          829.5360107421875
+        ],
+        [
+          929.4414672851562,
+          24.316532135009766,
+          1073.3394775390625,
+          829.5579223632812
+        ],
+        [
+          1075.5992431640625,
+          24.44129753112793,
+          1153.9281005859375,
+          829.9590454101562
+        ]
+      ]
+    },
+    "step3": {
+      "num_cells": 107,
+      "avg_confidence": 0.8819358817971972,
+      "texts": [
+        "Oroup",
+        "University company",
+        "Note",
+        "2025",
+        "2024",
+        "2025",
+        "2024",
+        "S'000",
+        "S'000",
+        "S'000",
+        "S'00O",
+        "ASSETS",
+        "Non-curent assets",
+        "Property, plant and equipment",
+        "1,511,947",
+        "1,563,588",
+        "1,506,512",
+        ",557,427",
+        "Intangible assets",
+        "877",
+        "1,889",
+        "556",
+        "1,41",
+        "Subsidiaries",
+        "500",
+        "500",
+        "Equity-accounted investees",
+        "18,947",
+        "18,991",
+        "18,947",
+        "18,863",
+        "Student loans",
+        "2,192",
+        "1,780",
+        "2,192",
+        "1,780",
+        "Total",
+        "non-curent assets",
+        "533,963",
+        "586,248",
+        "528,707",
+        "1,579,981",
+        "Current assets",
+        "Student loans",
+        "762",
+        "684",
+        "762",
+        "684",
+        "Trade and other receivables",
+        "558,128",
+        "495,351",
+        "551,896",
+        "483,483",
+        "Other investments",
+        "11",
+        "5,481,384",
+        "4,874,843",
+        "5,467,851",
+        "4,854,420",
+        "Cash and cash equivalents",
+        "12",
+        "1,589,900",
+        "1,640,416",
+        "1,546,027",
+        "1,597,559",
+        "Total current assets",
+        "7,630,174",
+        "7,011,294",
+        "7,566,536",
+        "936,146",
+        "Total assets",
+        "9,164,137",
+        "8,597,542",
+        "9,095,243",
+        "8,516,127",
+        "LIABILITIES",
+        "Non-current liabilities",
+        "Deferred capital grants",
+        "936,264",
+        "790,714",
+        "935,676",
+        "789,802",
+        "Grant received in advance:",
+        "Sinking fund",
+        "302,307",
+        "451,845",
+        "302,307",
+        "451,845",
+        "Loans and borrowings",
+        "17",
+        "650,000",
+        "650,000",
+        "650,000",
+        "650,000",
+        "Other non-curent liabilities",
+        "538",
+        "75",
+        "Lease liabilities",
+        "1,119",
+        "2,372",
+        "555",
+        "779",
+        "Total non-current liabilities",
+        "890.228",
+        "895.006",
+        "888.538",
+        "892.426"
+      ]
+    },
+    "step4": {
+      "total_numeric": 79,
+      "successful": 75,
+      "accuracy": 94.9367088607595,
+      "parsed": [
+        {
+          "text": "2025",
+          "value": 2025.0,
+          "success": true
+        },
+        {
+          "text": "2024",
+          "value": 2024.0,
+          "success": true
+        },
+        {
+          "text": "2025",
+          "value": 2025.0,
+          "success": true
+        },
+        {
+          "text": "2024",
+          "value": 2024.0,
+          "success": true
+        },
+        {
+          "text": "S'000",
+          "value": null,
+          "success": false
+        },
+        {
+          "text": "S'000",
+          "value": null,
+          "success": false
+        },
+        {
+          "text": "S'000",
+          "value": null,
+          "success": false
+        },
+        {
+          "text": "S'00O",
+          "value": null,
+          "success": false
+        },
+        {
+          "text": "1,511,947",
+          "value": 1511947.0,
+          "success": true
+        },
+        {
+          "text": "1,563,588",
+          "value": 1563588.0,
+          "success": true
+        }
+      ]
+    },
+    "step5": {
+      "total_cells": 107,
+      "type_distribution": {
+        "column_header": 3,
+        "numeric": 79,
+        "section_header": 2,
+        "row_header": 18,
+        "total": 4,
+        "data": 1
+      },
+      "grid_classifications": [
+        [
+          "column_header",
+          "column_header"
+        ],
+        [
+          "column_header",
+          "numeric",
+          "numeric",
+          "numeric",
+          "numeric"
+        ],
+        [
+          "numeric",
+          "numeric",
+          "numeric",
+          "numeric"
+        ],
+        [
+          "section_header"
+        ],
+        [
+          "row_header"
+        ],
+        [
+          "row_header",
+          "numeric",
+          "numeric",
+          "numeric",
+          "numeric"
+        ],
+        [
+          "row_header",
+          "numeric",
+          "numeric",
+          "numeric",
+          "numeric"
+        ],
+        [
+          "row_header",
+          "numeric",
+          "numeric"
+        ],
+        [
+          "row_header",
+          "numeric",
+          "numeric",
+          "numeric",
+          "numeric"
+        ],
+        [
+          "row_header",
+          "numeric",
+          "numeric",
+          "numeric",
+          "numeric"
+        ],
+        [
+          "total",
+          "data",
+          "numeric",
+          "numeric",
+          "numeric",
+          "numeric"
+        ],
+        [
+          "row_header"
+        ],
+        [
+          "row_header",
+          "numeric",
+          "numeric",
+          "numeric",
+          "numeric"
+        ],
+        [
+          "row_header",
+          "numeric",
+          "numeric",
+          "numeric",
+          "numeric"
+        ],
+        [
+          "row_header",
+          "numeric",
+          "numeric",
+          "numeric",
+          "numeric",
+          "numeric"
+        ],
+        [
+          "row_header",
+          "numeric",
+          "numeric",
+          "numeric",
+          "numeric",
+          "numeric"
+        ],
+        [
+          "total",
+          "numeric",
+          "numeric",
+          "numeric",
+          "numeric"
+        ],
+        [
+          "total",
+          "numeric",
+          "numeric",
+          "numeric",
+          "numeric"
+        ],
+        [
+          "section_header"
+        ],
+        [
+          "row_header"
+        ],
+        [
+          "row_header",
+          "numeric",
+          "numeric",
+          "numeric",
+          "numeric"
+        ],
+        [
+          "row_header"
+        ],
+        [
+          "row_header",
+          "numeric",
+          "numeric",
+          "numeric",
+          "numeric"
+        ],
+        [
+          "row_header",
+          "numeric",
+          "numeric",
+          "numeric",
+          "numeric",
+          "numeric"
+        ],
+        [
+          "row_header",
+          "numeric",
+          "numeric"
+        ],
+        [
+          "row_header",
+          "numeric",
+          "numeric",
+          "numeric",
+          "numeric"
+        ],
+        [
+          "total",
+          "numeric",
+          "numeric",
+          "numeric",
+          "numeric"
+        ]
+      ]
+    },
+    "step6": {
+      "total_questions": 10,
+      "correct": 3,
+      "accuracy": 30.0,
+      "qa_results": [
+        {
+          "question": "What is the value of Property, plant and equipment for Group 2025?",
+          "row_key": "Property, plant and equipment",
+          "col_key": "Group 2025",
+          "row_idx": 5,
+          "col_idx": 1,
+          "gt_answer": "1,511,947",
+          "pred_answer": "1,511,947",
+          "correct": true
+        },
+        {
+          "question": "What is Total assets for University Company 2024?",
+          "row_key": "Total assets",
+          "col_key": "University Company 2024",
+          "row_idx": 3,
+          "col_idx": 1,
+          "gt_answer": "8,516,127",
+          "pred_answer": null,
+          "correct": false
+        },
+        {
+          "question": "What is the Cash and cash equivalents for Group 2024?",
+          "row_key": "Cash and cash equivalents",
+          "col_key": "Group 2024",
+          "row_idx": 15,
+          "col_idx": 2,
+          "gt_answer": "1,640,416",
+          "pred_answer": "1,589,900",
+          "correct": false
+        },
+        {
+          "question": "What is Other investments for University Company 2025?",
+          "row_key": "Other investments",
+          "col_key": "University Company 2025",
+          "row_idx": 14,
+          "col_idx": 1,
+          "gt_answer": "5,467,851",
+          "pred_answer": "11",
+          "correct": false
+        },
+        {
+          "question": "What is Total current assets for Group 2025?",
+          "row_key": "Total current assets",
+          "col_key": "Group 2025",
+          "row_idx": 3,
+          "col_idx": 1,
+          "gt_answer": "7,630,174",
+          "pred_answer": null,
+          "correct": false
+        },
+        {
+          "question": "What is Loans and borrowings for Group 2025?",
+          "row_key": "Loans and borrowings",
+          "col_key": "Group 2025",
+          "row_idx": 23,
+          "col_idx": 1,
+          "gt_answer": "650,000",
+          "pred_answer": "17",
+          "correct": false
+        },
+        {
+          "question": "What is the value of Intangible assets for University Company 2024?",
+          "row_key": "Intangible assets",
+          "col_key": "University Company 2024",
+          "row_idx": 3,
+          "col_idx": 1,
+          "gt_answer": "1,411",
+          "pred_answer": null,
+          "correct": false
+        },
+        {
+          "question": "What is Total non-current liabilities for Group 2024?",
+          "row_key": "Total non-current liabilities",
+          "col_key": "Group 2024",
+          "row_idx": 10,
+          "col_idx": 2,
+          "gt_answer": "1,895,006",
+          "pred_answer": "533,963",
+          "correct": false
+        },
+        {
+          "question": "What is the Sinking fund for University Company 2025?",
+          "row_key": "- Sinking fund",
+          "col_key": "University Company 2025",
+          "row_idx": 22,
+          "col_idx": 1,
+          "gt_answer": "302,307",
+          "pred_answer": "302,307",
+          "correct": true
+        },
+        {
+          "question": "What is Trade and other receivables for Group 2025?",
+          "row_key": "Trade and other receivables",
+          "col_key": "Group 2025",
+          "row_idx": 13,
+          "col_idx": 1,
+          "gt_answer": "558,128",
+          "pred_answer": "558,128",
+          "correct": true
+        }
+      ]
+    }
+  },
+  "table_grid": [
+    [
+      "Oroup",
+      "University company"
+    ],
+    [
+      "Note",
+      "2025",
+      "2024",
+      "2025",
+      "2024"
+    ],
+    [
+      "S'000",
+      "S'000",
+      "S'000",
+      "S'00O"
+    ],
+    [
+      "ASSETS"
+    ],
+    [
+      "Non-curent assets"
+    ],
+    [
+      "Property, plant and equipment",
+      "1,511,947",
+      "1,563,588",
+      "1,506,512",
+      ",557,427"
+    ],
+    [
+      "Intangible assets",
+      "877",
+      "1,889",
+      "556",
+      "1,41"
+    ],
+    [
+      "Subsidiaries",
+      "500",
+      "500"
+    ],
+    [
+      "Equity-accounted investees",
+      "18,947",
+      "18,991",
+      "18,947",
+      "18,863"
+    ],
+    [
+      "Student loans",
+      "2,192",
+      "1,780",
+      "2,192",
+      "1,780"
+    ],
+    [
+      "Total",
+      "non-curent assets",
+      "533,963",
+      "586,248",
+      "528,707",
+      "1,579,981"
+    ],
+    [
+      "Current assets"
+    ],
+    [
+      "Student loans",
+      "762",
+      "684",
+      "762",
+      "684"
+    ],
+    [
+      "Trade and other receivables",
+      "558,128",
+      "495,351",
+      "551,896",
+      "483,483"
+    ],
+    [
+      "Other investments",
+      "11",
+      "5,481,384",
+      "4,874,843",
+      "5,467,851",
+      "4,854,420"
+    ],
+    [
+      "Cash and cash equivalents",
+      "12",
+      "1,589,900",
+      "1,640,416",
+      "1,546,027",
+      "1,597,559"
+    ],
+    [
+      "Total current assets",
+      "7,630,174",
+      "7,011,294",
+      "7,566,536",
+      "936,146"
+    ],
+    [
+      "Total assets",
+      "9,164,137",
+      "8,597,542",
+      "9,095,243",
+      "8,516,127"
+    ],
+    [
+      "LIABILITIES"
+    ],
+    [
+      "Non-current liabilities"
+    ],
+    [
+      "Deferred capital grants",
+      "936,264",
+      "790,714",
+      "935,676",
+      "789,802"
+    ],
+    [
+      "Grant received in advance:"
+    ],
+    [
+      "Sinking fund",
+      "302,307",
+      "451,845",
+      "302,307",
+      "451,845"
+    ],
+    [
+      "Loans and borrowings",
+      "17",
+      "650,000",
+      "650,000",
+      "650,000",
+      "650,000"
+    ],
+    [
+      "Other non-curent liabilities",
+      "538",
+      "75"
+    ],
+    [
+      "Lease liabilities",
+      "1,119",
+      "2,372",
+      "555",
+      "779"
+    ],
+    [
+      "Total non-current liabilities",
+      "890.228",
+      "895.006",
+      "888.538",
+      "892.426"
+    ]
+  ]
+}

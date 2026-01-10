@@ -1,0 +1,126 @@
+{
+  "mistral_ocr": {
+    "accuracy": 100.0,
+    "correct": 10,
+    "total": 10,
+    "time_ms": 5709,
+    "details": [
+      {
+        "row_key": "Property, plant and equipment",
+        "col_key": "Group 2025",
+        "expected": "1,511,947",
+        "predicted": "1,511,947",
+        "correct": true,
+        "row_idx": 5,
+        "col_idx": 2,
+        "row_score": 1.0,
+        "col_score": 1.0
+      },
+      {
+        "row_key": "Property, plant and equipment",
+        "col_key": "Group 2024",
+        "expected": "1,563,588",
+        "predicted": "1,563,588",
+        "correct": true,
+        "row_idx": 5,
+        "col_idx": 3,
+        "row_score": 1.0,
+        "col_score": 1.0
+      },
+      {
+        "row_key": "Property, plant and equipment",
+        "col_key": "University Company 2025",
+        "expected": "1,506,512",
+        "predicted": "1,506,512",
+        "correct": true,
+        "row_idx": 5,
+        "col_idx": 4,
+        "row_score": 1.0,
+        "col_score": 1.0
+      },
+      {
+        "row_key": "Property, plant and equipment",
+        "col_key": "University Company 2024",
+        "expected": "1,557,427",
+        "predicted": "1,557,427",
+        "correct": true,
+        "row_idx": 5,
+        "col_idx": 5,
+        "row_score": 1.0,
+        "col_score": 1.0
+      },
+      {
+        "row_key": "Intangible assets",
+        "col_key": "Group 2025",
+        "expected": "877",
+        "predicted": "877",
+        "correct": true,
+        "row_idx": 6,
+        "col_idx": 2,
+        "row_score": 1.0,
+        "col_score": 1.0
+      },
+      {
+        "row_key": "Intangible assets",
+        "col_key": "Group 2024",
+        "expected": "1,889",
+        "predicted": "1,889",
+        "correct": true,
+        "row_idx": 6,
+        "col_idx": 3,
+        "row_score": 1.0,
+        "col_score": 1.0
+      },
+      {
+        "row_key": "Intangible assets",
+        "col_key": "University Company 2025",
+        "expected": "556",
+        "predicted": "556",
+        "correct": true,
+        "row_idx": 6,
+        "col_idx": 4,
+        "row_score": 1.0,
+        "col_score": 1.0
+      },
+      {
+        "row_key": "Intangible assets",
+        "col_key": "University Company 2024",
+        "expected": "1,411",
+        "predicted": "1,411",
+        "correct": true,
+        "row_idx": 6,
+        "col_idx": 5,
+        "row_score": 1.0,
+        "col_score": 1.0
+      },
+      {
+        "row_key": "Subsidiaries",
+        "col_key": "University Company 2025",
+        "expected": "500",
+        "predicted": "500",
+        "correct": true,
+        "row_idx": 7,
+        "col_idx": 4,
+        "row_score": 1.0,
+        "col_score": 1.0
+      },
+      {
+        "row_key": "Subsidiaries",
+        "col_key": "University Company 2024",
+        "expected": "500",
+        "predicted": "500",
+        "correct": true,
+        "row_idx": 7,
+        "col_idx": 5,
+        "row_score": 1.0,
+        "col_score": 1.0
+      }
+    ]
+  },
+  "easyocr_pipeline": {
+    "accuracy": 30.0,
+    "correct": 3,
+    "total": 10,
+    "time_ms": 24549
+  }
+}

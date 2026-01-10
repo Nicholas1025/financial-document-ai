@@ -1,0 +1,20 @@
+{
+  "pages": [
+    {
+      "index": 0,
+      "markdown": "|   |  | Group |   | University Company  |   |\n| --- | --- | --- | --- | --- | --- |\n|   | Note | 2025 | 2024 | 2025 | 2024  |\n|   |  | $'000 | $'000 | $'000 | $'000  |\n|  ASSETS |  |  |  |  |   |\n|  Non-current assets |  |  |  |  |   |\n|  Property, plant and equipment | 4 | 1,511,947 | 1,563,588 | 1,506,512 | 1,557,427  |\n|  Intangible assets | 5 | 877 | 1,889 | 556 | 1,411  |\n|  Subsidiaries | 6 | – | – | 500 | 500  |\n|  Equity-accounted investees | 7 | 18,947 | 18,991 | 18,947 | 18,863  |\n|  Student loans | 8 | 2,192 | 1,780 | 2,192 | 1,780  |\n|  Total non-current assets |  | 1,533,963 | 1,586,248 | 1,528,707 | 1,579,981  |\n|  Current assets |  |  |  |  |   |\n|  Student loans | 8 | 762 | 684 | 762 | 684  |\n|  Trade and other receivables | 10 | 558,128 | 495,351 | 551,896 | 483,483  |\n|  Other investments | 11 | 5,481,384 | 4,874,843 | 5,467,851 | 4,854,420  |\n|  Cash and cash equivalents | 12 | 1,589,900 | 1,640,416 | 1,546,027 | 1,597,559  |\n|  Total current assets |  | 7,630,174 | 7,011,294 | 7,566,536 | 6,936,146  |\n|  Total assets |  | 9,164,137 | 8,597,542 | 9,095,243 | 8,516,127  |\n|  LIABILITIES |  |  |  |  |   |\n|  Non-current liabilities |  |  |  |  |   |\n|  Deferred capital grants | 13 | 936,264 | 790,714 | 935,676 | 789,802  |\n|  Grant received in advance: |  |  |  |  |   |\n|  - Sinking fund | 14 | 302,307 | 451,845 | 302,307 | 451,845  |\n|  Loans and borrowings | 17 | 650,000 | 650,000 | 650,000 | 650,000  |\n|  Other non-current liabilities |  | 538 | 75 | – | –  |\n|  Lease liabilities | 19 | 1,119 | 2,372 | 555 | 779  |\n|  Total non-current liabilities |  | 1,890,228 | 1,895,006 | 1,888,538 | 1,892,426  |",
+      "images": [],
+      "dimensions": {
+        "dpi": 200,
+        "height": 899,
+        "width": 1244
+      }
+    }
+  ],
+  "model": "mistral-ocr-2505",
+  "document_annotation": null,
+  "usage_info": {
+    "pages_processed": 1,
+    "doc_size_bytes": 338877
+  }
+}
