@@ -2,13 +2,14 @@
 Financial Document Processing Pipeline
 
 Encapsulates the end-to-end logic for processing financial table images:
-1. Structure Recognition (Table Transformer)
-2. OCR (PaddleOCR / Docling)
-3. Grid Alignment (with fallback)
-4. Numeric Normalization
-5. Semantic Mapping
-6. Rule-based Validation
-7. LLM Validation (optional, using Gemini)
+1. Table Detection (DETR)
+2. Structure Recognition (Table Transformer)
+3. OCR (PaddleOCR / Docling)
+4. Grid Alignment (with fallback)
+5. Numeric Normalization
+6. Semantic Mapping
+7. Rule-based Validation
+8. LLM Validation (optional, using Gemini)
 """
 import os
 import subprocess
@@ -59,13 +60,14 @@ class FinancialTablePipeline:
     End-to-end pipeline for financial table processing.
     
     Pipeline Steps:
-        1. Structure Recognition - Detect table structure (rows, columns, cells)
-        2. OCR - Extract text from image
-        3. Grid Alignment - Map OCR results to table structure
-        4. Numeric Normalization - Parse and normalize numbers
-        5. Semantic Mapping - Map labels to standard terms
-        6. Rule-based Validation - Check accounting rules (e.g., equity balance)
-        7. LLM Validation (optional) - Cross-validate using Gemini
+        1. Table Detection - Detect and crop table region from full page
+        2. Structure Recognition - Detect table structure (rows, columns, cells)
+        3. OCR - Extract text from cropped table image
+        4. Grid Alignment - Map OCR results to table structure
+        5. Numeric Normalization - Parse and normalize numbers
+        6. Semantic Mapping - Map labels to standard terms
+        7. Rule-based Validation - Check accounting rules (e.g., equity balance)
+        8. LLM Validation (optional) - Cross-validate using Gemini
     """
 
     def __init__(self, config_path: str = 'configs/config.yaml', use_v1_1: bool = True,
@@ -87,6 +89,8 @@ class FinancialTablePipeline:
         
         # Keep structure recognizer in the main process (PyTorch).
         from .structure import TableStructureRecognizer
+        from .detection import TableDetector
+        self.detector = TableDetector(self.config)
         self.structure_recognizer = TableStructureRecognizer(self.config, use_v1_1=use_v1_1)
         
         # Initialize OCR backend
@@ -145,6 +149,22 @@ class FinancialTablePipeline:
         # Ensure consistent 3-channel input for structure model
         image = Image.open(image_path).convert('RGB')
         
+        # 0. Table Detection - crop the best table region
+        det_results = self.detector.detect(image)
+        if len(det_results['boxes']) > 0:
+            best_idx = int(np.argmax(det_results['scores']))
+            box = det_results['boxes'][best_idx]
+            w, h = image.size
+            padding = 10
+            x1 = max(0, int(box[0]) - padding)
+            y1 = max(0, int(box[1]) - padding)
+            x2 = min(w, int(box[2]) + padding)
+            y2 = min(h, int(box[3]) + padding)
+            table_image = image.crop((x1, y1, x2, y2))
+        else:
+            # Fallback: treat entire image as table
+            table_image = image
+        
         # Check if using Docling - it provides direct table extraction
         use_docling_tables = (self.ocr_backend == 'docling' and 
                              hasattr(self.ocr, 'extract_table_grid'))
@@ -156,14 +176,25 @@ class FinancialTablePipeline:
             ocr_results = []  # Not needed for Docling path
             
             # Still run structure for metadata (optional)
-            structure = self.structure_recognizer.recognize(image)
+            structure = self.structure_recognizer.recognize(table_image)
         else:
             # PaddleOCR path: Use Table Transformer + OCR + Grid Alignment
-            # 1. Structure Recognition
-            structure = self.structure_recognizer.recognize(image)
+            # 1. Structure Recognition (on CROPPED table)
+            structure = self.structure_recognizer.recognize(table_image)
             
-            # 2. OCR
-            ocr_results = self.ocr.extract_text(image_path)
+            # 2. OCR (on CROPPED table)
+            # Save cropped table for OCR (needs file path)
+            import tempfile
+            with tempfile.NamedTemporaryFile(suffix='.png', delete=False) as tmp:
+                table_image.save(tmp.name)
+                crop_path = tmp.name
+            try:
+                ocr_results = self.ocr.extract_text(crop_path)
+            finally:
+                try:
+                    os.remove(crop_path)
+                except:
+                    pass
             
             # 3. Grid Alignment
             grid = self.ocr.align_text_to_grid(
