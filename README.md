@@ -33,7 +33,7 @@ Final Output (Structured Tables + Validation Reports)
 ### Prerequisites
 - Python 3.11+
 - NVIDIA GPU with CUDA support (recommended)
-- 6GB+ GPU memory
+
 
 ### Setup
 
